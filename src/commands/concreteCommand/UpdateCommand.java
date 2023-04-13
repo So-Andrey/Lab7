@@ -6,11 +6,11 @@ import commands.Invoker;
 import exceptions.IllegalValueOfXException;
 import exceptions.InvalidCommandException;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class UpdateCommand implements Command {
-
     /**Метод, обновляющий имя дракона
      * @param dragon дракон, у которого меняется имя*/
     private void updateName(Scanner scanner, Dragon dragon) {
@@ -213,21 +213,18 @@ public class UpdateCommand implements Command {
      * @see UpdateCommand#requestInput(Scanner)
      * @see UpdateCommand#fieldsUpdater(String, Scanner, Dragon) */
     private void updateDragon(long id) {
-        boolean dragonExists = false;
-        //TODO lambda
-        for (Dragon dragon : DragonsCollection.getDragons()) {
-            if (dragon.getId() == id) {
-                dragonExists = true;
-                Scanner scanner = new Scanner(System.in);
-                String s = requestInput(scanner);
-                if (!(s.matches("[1-7]"))) {
-                    System.out.println("Неверный параметр");
-                } else {
-                    fieldsUpdater(s, scanner, dragon);
-                }
+        List<Dragon> matchedDragon = DragonsCollection.getDragons().stream().filter(dragon -> dragon.getId() == id).toList();
+        if (matchedDragon.isEmpty()) {
+            System.out.println("Такого дракона не существует");
+        } else {
+            Scanner scanner = new Scanner(System.in);
+            String s = requestInput(scanner);
+            if (!(s.matches("[1-7]"))) {
+                System.out.println("Неверный параметр");
+            } else {
+                fieldsUpdater(s, scanner, matchedDragon.get(0));
             }
         }
-        if (!dragonExists) System.out.println("Такого дракона не существует");
     }
     /**Метод, исполняющий команду
      * @see UpdateCommand#updateDragon(long) */
@@ -238,16 +235,15 @@ public class UpdateCommand implements Command {
                 throw new InvalidCommandException();
             }
             try {
-                Long.parseLong(Invoker.getSplit()[1]);
+                if (!DragonsCollection.getDragons().isEmpty()) {
+                    updateDragon(Long.parseLong(Invoker.getSplit()[1]));
+                } else {
+                    System.out.println("Такого дракона не существует");
+                }
             } catch (NumberFormatException ex) {
                 throw new InvalidCommandException();
             }
-            long id = Long.parseLong(Invoker.getSplit()[1]);
-            if (!DragonsCollection.getDragons().isEmpty()) {
-                updateDragon(id);
-            } else {
-                System.out.println("Такого дракона не существует");
-            }
+
         } catch (InvalidCommandException e) { System.out.println(e.getMessage()); }
     }
     /** Метод, обновляющий дракона параметрами из файла
@@ -258,29 +254,21 @@ public class UpdateCommand implements Command {
         try {
             if (Invoker.getSplit().length != 2) throw new InputMismatchException();
             try {
-                Long.parseLong(Invoker.getSplit()[1]);
+                List<Dragon> matchedDragon = DragonsCollection.getDragons().stream().filter(dragon -> dragon.getId() == Long.parseLong(Invoker.getSplit()[1])).toList();
+                if (matchedDragon.isEmpty()) {
+                    throw new InputMismatchException();
+                } else {
+                    fieldsUpdaterFromFile(parameters[0], parameters[1], matchedDragon.get(0), scanner);
+                }
             } catch (NumberFormatException numberFormatException) {
                 throw new InputMismatchException();
             }
-            long id = Long.parseLong(Invoker.getSplit()[1]);
-            boolean dragonExists = false;
-            Dragon thisDragon = new Dragon("", new Coordinates(0, 0), Long.parseLong("0"), null, DragonType.WATER, DragonCharacter.FICKLE, new DragonHead(Double.parseDouble("0")));
-            //TODO lambda
-            for (Dragon dragon : DragonsCollection.getDragons()) {
-                if (dragon.getId() == id) {
-                    dragonExists = true;
-                    thisDragon = dragon;
-                }
-            }
-            if (!dragonExists) throw new InputMismatchException();
-            fieldsUpdaterFromFile(parameters[0], parameters[1], thisDragon, scanner);
         } catch (InputMismatchException ignored) {}
     }
     /** Метод, считывающий обновляемое поле из фала
      * @return возвращает массив, состоящий из номера обновляемого параметра и его нового значения */
     private static String[] parametersReader(Scanner scanner) {
         String[] parameters = new String[2];
-        //TODO lambda
         for (int i = 0; i < parameters.length; ++i) {
             try {
                 parameters[i] = scanner.nextLine();

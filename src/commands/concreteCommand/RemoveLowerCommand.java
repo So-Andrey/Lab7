@@ -4,41 +4,22 @@ import allForDragons.*;
 import commands.Command;
 import commands.Invoker;
 import exceptions.InvalidCommandException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 
 public class RemoveLowerCommand implements Command {
-
     /**Метод, удаляющий из коллекции всех драконов младше заданного
-     * @param dragonExists параметр существования заданного дракона в коллекции
      * @param thisDragon заданный дракон*/
-    private void removerLower(boolean dragonExists, Dragon thisDragon) {
-        int countOfDragons = 0;
-        if (dragonExists) {
-            boolean isThereYoungerDragons = true;
-            do {
-                //TODO lambda
-                ArrayList<Dragon> dragons = new ArrayList<>(DragonsCollection.getDragons());
-                Collections.sort(dragons);
-                Dragon dragon = Collections.min(dragons);
-                if (dragon != thisDragon) {
-                    DragonsCollection.getDragons().remove(dragon);
-                    ++countOfDragons;
-                } else {
-                    isThereYoungerDragons = false;
-                }
-            } while (isThereYoungerDragons);
-        } else {
-            System.out.println("Заданного дракона не существует");
-        }
-        if (countOfDragons != 0) {
-            System.out.println("Количество удалённых драконов " + countOfDragons);
-        } else if (dragonExists) {
+    private void removerLower(Dragon thisDragon) {
+        List<Dragon> greaterDragons = DragonsCollection.getDragons().stream().filter(dragon -> dragon.getAge() < thisDragon.getAge()).toList();
+        if (greaterDragons.isEmpty()) {
             System.out.println("Драконов младше заданного не существует");
+        } else {
+            greaterDragons.forEach(dragon -> DragonsCollection.getDragons().remove(dragon));
+            System.out.println("Количество удалённых драконов " + greaterDragons.size());
         }
     }
     /**Метод, находящий заданного дракона в коллекции и вызывающий метод removerLower
-     * @see RemoveLowerCommand#removerLower(boolean, Dragon) */
+     * @see RemoveLowerCommand#removerLower(Dragon)  */
     @Override
     public void execute() {
         try {
@@ -46,24 +27,11 @@ public class RemoveLowerCommand implements Command {
                 throw new InvalidCommandException();
             }
             try {
-                Long.parseLong(Invoker.getSplit()[1]);
+                List<Dragon> matchedDragons = DragonsCollection.getDragons().stream().filter(dragon -> dragon.getId() == Long.parseLong(Invoker.getSplit()[1])).toList();
+                if (matchedDragons.isEmpty()) System.out.println("Заданного дракона не существует");
+                else removerLower(matchedDragons.get(0));
             } catch (NumberFormatException ex) {
                 throw new InvalidCommandException();
-            }
-            long id = Long.parseLong(Invoker.getSplit()[1]);
-            boolean dragonExists = false;
-            Dragon thisDragon = new Dragon("", new Coordinates(0,0), Long.parseLong("0"),Color.ORANGE, DragonType.WATER, DragonCharacter.FICKLE,new DragonHead(Double.parseDouble("0")));
-            if (!DragonsCollection.getDragons().isEmpty()) {
-                //TODO lambda
-                for (Dragon dragon : DragonsCollection.getDragons()) {
-                    if (dragon.getId() == id) {
-                        dragonExists = true;
-                        thisDragon = dragon;
-                    }
-                }
-                removerLower(dragonExists, thisDragon);
-            } else {
-                System.out.println("Коллекция пуста, заданного дракона не существует");
             }
         } catch (InvalidCommandException e) { System.out.println(e.getMessage()); }
     }

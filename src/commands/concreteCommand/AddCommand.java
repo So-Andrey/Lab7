@@ -1,4 +1,3 @@
-
 package commands.concreteCommand;
 
 import commands.Command;

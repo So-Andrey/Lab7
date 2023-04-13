@@ -6,7 +6,6 @@ import commands.Invoker;
 import exceptions.InvalidCommandException;
 
 public class ShowCommand implements Command {
-
     /**Метод, выводящий все элементы коллекции*/
     @Override
     public void execute() {
@@ -17,15 +16,10 @@ public class ShowCommand implements Command {
             if (DragonsCollection.getDragons().isEmpty()) {
                 System.out.println("Коллекция пуста");
             } else {
-                //TODO lambda
-                //DragonsCollection.getDragons().forEach(System.out::println);
-                for (Dragon dragon : DragonsCollection.getDragons()) {
-                    System.out.println(dragon);
-                }
+                DragonsCollection.getDragons().forEach(System.out::println);
             }
         } catch (InvalidCommandException e) { System.out.println(e.getMessage()); }
     }
-
     @Override
     public String description() {
         return "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении";

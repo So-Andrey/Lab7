@@ -4,57 +4,45 @@ import allForDragons.*;
 import commands.Command;
 import commands.Invoker;
 import exceptions.InvalidCommandException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class AddIfMinCommand implements Command {
     /**Метод, добавляющий в коллекцию нового дракона, если его возраст меньше имеющихся в коллекции
-     * @see DragonAdder#dragonAdder()*/
+     * @see DragonAdder#dragonAdder()
+     * @see AddIfMinCommand#ifMinAdder(Dragon) */
     @Override
     public void execute() {
         try {
             if (Invoker.getSplit().length != 1) {
                 throw new InvalidCommandException();
             }
-            ArrayList<Dragon> dragons = new ArrayList<>(DragonsCollection.getDragons());
-            Dragon dragon = DragonAdder.dragonAdder();
-            if (dragons.size() == 0) {
-                DragonsCollection.getDragons().add(dragon);
-                System.out.println("Новый элемент коллекции добавлен");
-            } else {
-                //TODO lambda
-                Collections.sort(dragons);
-                if (dragon.getAge() < dragons.get(0).getAge()) {
-                    DragonsCollection.getDragons().add(dragon);
-                    System.out.println("Новый элемент коллекции добавлен");
-                } else {
-                    System.out.println("Новый элемент не добавлен, так как возраст заданного дракона слишком большой");
-                }
-            }
+            ifMinAdder(DragonAdder.dragonAdder());
         } catch (InvalidCommandException e) { System.out.println(e.getMessage()); }
     }
     /** Метод, выполняющий команду add_if_min из файла
-     * @see DragonAdder#dragonFromFileAdder(Scanner) */
+     * @see DragonAdder#dragonFromFileAdder(Scanner)
+     * @see AddIfMinCommand#ifMinAdder(Dragon) */
     protected static void adderIfMinFromFile(Scanner scanner) {
         try {
             Dragon dragon = DragonAdder.dragonFromFileAdder(scanner);
-            ArrayList<Dragon> dragons = new ArrayList<>(DragonsCollection.getDragons());
-            if (dragons.size() == 0) {
+            ifMinAdder(dragon);
+        } catch (InputMismatchException ignored) {}
+    }
+    /**Метод, проверяющий возраст дракона и добавляющий его в случае меньшего возраста, чем у существующих драконов
+     * @param dragon добавляемый дракон */
+    private static void ifMinAdder(Dragon dragon) {
+        if (DragonsCollection.getDragons().isEmpty()) {
+            DragonsCollection.getDragons().add(dragon);
+            System.out.println("Новый элемент коллекции добавлен");
+        } else {
+            if (DragonsCollection.getDragons().stream().noneMatch((dragon1 -> dragon.getAge() >= dragon1.getAge()))) {
                 DragonsCollection.getDragons().add(dragon);
                 System.out.println("Новый элемент коллекции добавлен");
             } else {
-                //TODO lambda
-                Collections.sort(dragons);
-                if (dragon.getAge() < dragons.get(0).getAge()) {
-                    DragonsCollection.getDragons().add(dragon);
-                    System.out.println("Новый элемент коллекции добавлен");
-                } else {
-                    System.out.println("Новый элемент не добавлен, так как возраст заданного дракона слишком большой");
-                }
+                System.out.println("Новый элемент не добавлен, так как возраст заданного дракона слишком большой");
             }
-        } catch (InputMismatchException ignored) {}
+        }
     }
     @Override
     public String description() {
