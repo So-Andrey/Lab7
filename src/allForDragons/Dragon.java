@@ -109,6 +109,7 @@ public class Dragon implements Comparable<Dragon>{
                 "Характер: " + character + "\n" +
                 "Количество глаз: " + head.getEyesCount() + "\n" +
                 "Координаты: (" + coordinates.getX() + "; " + coordinates.getY() + ")\n" +
+                "Создатель: " + creator + "\n" +
                 "Дата и время создания: " + creationDate + "\n";
     }
     /** Метод для сравнения драконов по возрасту*/

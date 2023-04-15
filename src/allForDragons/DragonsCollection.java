@@ -1,5 +1,7 @@
 package allForDragons;
 
+import database.DatabaseConnection;
+import java.sql.ResultSet;
 import java.util.*;
 
 public class DragonsCollection {
@@ -16,51 +18,27 @@ public class DragonsCollection {
                 "Дата инициализации: " + dateOfInitialization + "\n" +
                 "Количество элементов: " + dragons.size() + "\n");
     }
-    /*
-    public static boolean putDragonsFromFile() {
+    /** Метод для добавления драконов из базы данных */
+    public static void putDragonsFromDB() {
         try {
-            Scanner scanner = new Scanner(new File(Invoker.getFile()));
-            String name;
-            long x;
-            float y;
-            long age;
-            Color color;
-            DragonType type;
-            DragonCharacter character;
-            double eyesCount;
-            while (scanner.hasNext()) {
+            ResultSet resultSet = DatabaseConnection.executePreparedStatement("SELECT * FROM DRAGONS");
+            while (resultSet.next()) {
                 try {
-                    String[] dragon = scanner.nextLine().split(", ");
-                    if (dragon.length == 8) {
-                        try {
-                            if (!dragon[0].trim().isEmpty()) {
-                                name = dragon[0];
-                            } else {
-                                throw new InputMismatchException();
-                            }
-                            age = Long.parseLong(dragon[1]);
-                            x = Long.parseLong(dragon[2]);
-                            y = Float.parseFloat(dragon[3]);
-                            if (dragon[4].equals("GREEN") || dragon[4].equals("ORANGE") || dragon[4].equals("BROWN") || dragon[4].equals("null") | dragon[5].equals("WATER") || dragon[5].equals("UNDERGROUND") || dragon[5].equals("FIRE") || dragon[6].equals("CUNNING") || dragon[6].equals("CHAOTIC_EVIL") || dragon[6].equals("WISE") || dragon[6].equals("FICKLE")) {
-                                color = Color.valueOf(dragon[4]);
-                                type = DragonType.valueOf(dragon[5]);
-                                character = DragonCharacter.valueOf(dragon[6]);
-                            } else {
-                                throw new InputMismatchException();
-                            }
-                            eyesCount = Double.parseDouble(dragon[7]);
-                            dragons.add(new Dragon(name, new Coordinates(x, y), age, color, type, character, new DragonHead(eyesCount)));
-                        } catch (Exception ignored) {}
-                    }
+                    long id = resultSet.getLong(1);
+                    String creator = resultSet.getString(2);
+                    java.sql.Date creationDate = new java.sql.Date(resultSet.getLong(3));
+                    String name = resultSet.getString(4);
+                    long age = resultSet.getLong(5);
+                    Color color = Color.valueOf(resultSet.getString(6));
+                    DragonType type = DragonType.valueOf(resultSet.getString(7));
+                    DragonCharacter character = DragonCharacter.valueOf(resultSet.getString(8));
+                    double eyesCount = resultSet.getDouble(9);
+                    long x = resultSet.getLong(10);
+                    float y = resultSet.getFloat(11);
+                    DragonsCollection.getDragons().add(new Dragon(name, new Coordinates(x, y), age, color, type, character, new DragonHead(eyesCount), creator, creationDate, id));
                 } catch (Exception ignored) {}
             }
-            scanner.close();
-            System.out.println("Из файла добавлено объектов в коллекцию: " + dragons.size());
-            return true;
-        } catch (FileNotFoundException fileNotFoundException) {
-            System.out.println("Файл не найден");
-            return false;
-        }
+        } catch (Exception ignored) {}
+        System.out.println("Из базы данных добавлено объектов в коллекцию: " + dragons.size());
     }
-    */
 }
