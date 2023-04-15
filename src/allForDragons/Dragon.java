@@ -15,7 +15,8 @@ public class Dragon implements Comparable<Dragon>{
     private DragonType type; //Поле не может быть null
     private DragonCharacter character; //Поле может быть null
     private DragonHead head;
-    public Dragon(String name, Coordinates coordinates, Long age, Color color, DragonType type, DragonCharacter character, DragonHead head){
+    private String creator;
+    public Dragon(String name, Coordinates coordinates, Long age, Color color, DragonType type, DragonCharacter character, DragonHead head, String creator) {
         setId();
         creationDate = new Date();
         this.name = name;
@@ -25,6 +26,7 @@ public class Dragon implements Comparable<Dragon>{
         this.head = head;
         this.type = type;
         this.color = color;
+        this.creator = creator;
     }
     private void setId() {
         ResultSet resultSet = DatabaseConnection.executePreparedStatement("SELECT nextval(?)", "id");
@@ -58,6 +60,9 @@ public class Dragon implements Comparable<Dragon>{
     }
     public DragonHead getHead() {
         return head;
+    }
+    public String getCreator() {
+        return creator;
     }
     public void setName(String name) {
         this.name = name;
