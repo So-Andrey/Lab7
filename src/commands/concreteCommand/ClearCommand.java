@@ -4,6 +4,7 @@ import allForDragons.DragonsCollection;
 import commands.Command;
 import commands.CommandArgsChecker;
 import database.DatabaseConnection;
+import database.UserAuthentication;
 
 public class ClearCommand implements Command {
     /**Метод, очищающий коллекцию
@@ -13,9 +14,9 @@ public class ClearCommand implements Command {
     @Override
     public void execute() {
         CommandArgsChecker.commandArgsChecker(0);
-        DatabaseConnection.executeStatement("delete from dragons");
+        DatabaseConnection.executeStatement("delete from dragons where creator = '" + UserAuthentication.getCurrentUser() + "'");
         DragonsCollection.updateFromDB();
-        System.out.println("Коллекция очищена");
+        System.out.println("Созданная Вами часть коллекции очищена");
     }
     @Override
     public String description() {
