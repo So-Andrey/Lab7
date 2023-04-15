@@ -1,8 +1,5 @@
 package allForDragons;
 
-import commands.Invoker;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 
 public class DragonsCollection {
@@ -19,8 +16,7 @@ public class DragonsCollection {
                 "Дата инициализации: " + dateOfInitialization + "\n" +
                 "Количество элементов: " + dragons.size() + "\n");
     }
-    /**Метод для добавления драконов из файла в коллекцию
-     * @return возвращает boolean в зависимости от того, существует файл или нет */
+    /*
     public static boolean putDragonsFromFile() {
         try {
             Scanner scanner = new Scanner(new File(Invoker.getFile()));
@@ -66,4 +62,5 @@ public class DragonsCollection {
             return false;
         }
     }
+    */
 }
