@@ -1,6 +1,8 @@
 package allForDragons;
 
-import java.util.UUID;
+import database.DatabaseConnection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 public class Dragon implements Comparable<Dragon>{
@@ -25,69 +27,56 @@ public class Dragon implements Comparable<Dragon>{
         this.color = color;
     }
     private void setId() {
-        UUID uuid = UUID.randomUUID();
-        id = uuid.getMostSignificantBits();
-        while (id <= 0) {
-            uuid = UUID.randomUUID();
-            id = uuid.getMostSignificantBits();
+        ResultSet resultSet = DatabaseConnection.executePreparedStatement("SELECT nextval(?)", "id");
+        try {
+            resultSet.next();
+            id = resultSet.getLong(1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
-
     public long getId() {
         return id;
     }
-
     public String getName() {
         return name;
     }
-
     public Coordinates getCoordinates() {
         return coordinates;
     }
-
     public Long getAge() {
         return age;
     }
-
     public Color getColor() {
         return color;
     }
-
     public DragonType getType() {
         return type;
     }
-
     public DragonCharacter getCharacter() {
         return character;
     }
-
     public DragonHead getHead() {
         return head;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public void setAge(Long age) {
         this.age = age;
     }
-
     public void setColor(Color color) {
         this.color = color;
     }
-
     public void setType(DragonType type) {
         this.type = type;
     }
-
     public void setCharacter(DragonCharacter character) {
         this.character = character;
     }
-
     @Override
     public String toString() {
-        return "Дракон " + id + "\n" +
+        return "id дракона: " + id + "\n" +
                 "Имя: " + name + "\n" +
                 "Возраст: " + age + "\n" +
                 "Тип: " + type + "\n" +
