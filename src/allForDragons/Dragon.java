@@ -75,8 +75,8 @@ public class Dragon implements Comparable<Dragon>{
     public DragonCharacter getCharacter() {
         return character;
     }
-    public Date getCreationDate() {
-        return creationDate;
+    public long getCreationTime() {
+        return creationDate.getTime();
     }
     public DragonHead getHead() {
         return head;

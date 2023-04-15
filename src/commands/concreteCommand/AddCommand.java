@@ -8,19 +8,20 @@ import java.util.Scanner;
 
 public class AddCommand implements Command {
     /**Метод, добавляющий в коллекцию нового дракона
-     * @see DragonAdder#dragonAdder() */
+     * @see CommandArgsChecker#commandArgsChecker(int)
+     * @see DragonAdder#dragonAdder()
+     * @see DragonAdder#dragonToAdderToDB(Dragon) */
     @Override
-    public void execute() throws InputMismatchException {
+    public void execute() {
         CommandArgsChecker.commandArgsChecker(0);
-        DragonsCollection.getDragons().add(DragonAdder.dragonAdder());
-        System.out.println("Новый элемент коллекции добавлен");
+        DragonAdder.dragonToAdderToDB(DragonAdder.dragonAdder());
     }
     /** Метод, выполняющий команду add из файла
-     * @see DragonAdder#dragonFromFileAdder(Scanner) */
+     * @see DragonAdder#dragonFromFileAdder(Scanner)
+     * @see DragonAdder#dragonToAdderToDB(Dragon) */
     protected static void adderFromFile(Scanner scanner) {
         try {
-            DragonsCollection.getDragons().add(DragonAdder.dragonFromFileAdder(scanner));
-            System.out.println("Новый элемент коллекции добавлен");
+            DragonAdder.dragonToAdderToDB(DragonAdder.dragonFromFileAdder(scanner));
         } catch (InputMismatchException ignored) {}
     }
     @Override

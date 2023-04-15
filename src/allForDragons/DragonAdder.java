@@ -1,12 +1,22 @@
 package allForDragons;
 
 import commands.Invoker;
+import database.DatabaseConnection;
 import exceptions.IllegalValueOfXException;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class DragonAdder {
+    /** Метод, добавляющий нового дракона в базу данных и в коллекцию
+     * @see DatabaseConnection#executeStatement(String)
+     * @see DragonsCollection#updateFromDB()
+     * @param dragon добавляемый дракон */
+    public static void dragonToAdderToDB(Dragon dragon) {
+        DatabaseConnection.executeStatement("insert into dragons (id, creator, creationDate, name, age, color, type, character, eyesCount, x, y) values ('" + dragon.getId() + "', '" + dragon.getCreator() + "', '" + dragon.getCreationTime() + "', '" + dragon.getName() + "', '" + dragon.getAge() + "', '" + dragon.getColor() + "', '" + dragon.getType() + "', '" + dragon.getCharacter() + "', '" + dragon.getHead().getEyesCount() + "', '" + dragon.getCoordinates().getX() + "', '" + dragon.getCoordinates().getY() + "')");
+        DragonsCollection.updateFromDB();
+        System.out.println("Новый элемент коллекции добавлен");
+    }
     /**Метод для создания дракона с помощью консоли
      * @return Dragon*/
     public static Dragon dragonAdder() {

@@ -7,6 +7,7 @@ public class Main {
         UserAuthentication.userAuthentication();
         if (UserAuthentication.getCurrentUser() != null) {
             DragonsCollection.putDragonsFromDB();
+            System.out.println("Из базы данных добавлено объектов в коллекцию: " + DragonsCollection.getDragons().size());
             Invoker.invoker();
         } else {
             System.out.println("Выполнение команд неавторизованными пользователями запрещено, работа программы остановлена");

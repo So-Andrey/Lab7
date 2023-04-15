@@ -39,6 +39,9 @@ public class DragonsCollection {
                 } catch (Exception ignored) {}
             }
         } catch (Exception ignored) {}
-        System.out.println("Из базы данных добавлено объектов в коллекцию: " + dragons.size());
+    }
+    public static void updateFromDB() {
+        dragons.clear();
+        putDragonsFromDB();
     }
 }
