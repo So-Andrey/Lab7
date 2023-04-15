@@ -1,7 +1,6 @@
 package allForDragons;
 
 import commands.Invoker;
-import database.UserAuthentication;
 import exceptions.IllegalValueOfXException;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
@@ -123,7 +122,7 @@ public class DragonAdder {
                 System.out.println("Неверный тип данных");
             }
         }
-        return new Dragon(name, new Coordinates(x, y), age, dragonColor, dragonType, dragonCharacter, new DragonHead(eyesCount), UserAuthentication.getCurrentUser());
+        return new Dragon(name, new Coordinates(x, y), age, dragonColor, dragonType, dragonCharacter, new DragonHead(eyesCount));
     }
     /**Метод для добавления дракона из файла
      * @see DragonAdder#fieldsReader(Scanner)
@@ -139,7 +138,7 @@ public class DragonAdder {
     public static Dragon dragonFromFileAdder(Scanner scanner) {
         if (Invoker.getSplit().length != 1) throw new InputMismatchException();
         String[] fields = fieldsReader(scanner);
-        return new Dragon(nameFromFileChecker(fields[0]), new Coordinates(XCoordinateFromFileChecker(fields[1]), YCoordinateFromFileChecker(fields[2])), ageFromFileChecker(fields[3]), colorFromFileChecker(fields[4]), typeFromFileChecker(fields[5]), characterFromFileChecker(fields[6]), new DragonHead(eyesCountFromFileChecker(fields[7])),UserAuthentication.getCurrentUser());
+        return new Dragon(nameFromFileChecker(fields[0]), new Coordinates(XCoordinateFromFileChecker(fields[1]), YCoordinateFromFileChecker(fields[2])), ageFromFileChecker(fields[3]), colorFromFileChecker(fields[4]), typeFromFileChecker(fields[5]), characterFromFileChecker(fields[6]), new DragonHead(eyesCountFromFileChecker(fields[7])));
     }
     /**Метод, считывающий поля дракона из файла
      * @return возвращает массив с полями нового дракона */

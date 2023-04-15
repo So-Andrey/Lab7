@@ -2,8 +2,7 @@ package commands.concreteCommand;
 
 import allForDragons.DragonsCollection;
 import commands.Command;
-import commands.Invoker;
-import exceptions.InvalidCommandException;
+import commands.CommandArgsChecker;
 
 public class PrintAscendingCommand implements Command {
     /**Метод, выводящий драконов в порядке возрастания значения возраста*/
@@ -14,16 +13,12 @@ public class PrintAscendingCommand implements Command {
      * @see PrintAscendingCommand#ascendingPrinter() */
     @Override
     public void execute() {
-        try {
-            if (Invoker.getSplit().length != 1) {
-                throw new InvalidCommandException();
-            }
-            if (DragonsCollection.getDragons().isEmpty()) {
-                System.out.println("Коллекция пуста");
-            } else {
-                ascendingPrinter();
-            }
-        } catch (InvalidCommandException e) { System.out.println(e.getMessage()); }
+        CommandArgsChecker.commandArgsChecker(0);
+        if (DragonsCollection.getDragons().isEmpty()) {
+            System.out.println("Коллекция пуста");
+        } else {
+            ascendingPrinter();
+        }
     }
     @Override
     public String description() {

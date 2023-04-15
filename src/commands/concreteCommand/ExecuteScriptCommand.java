@@ -1,19 +1,17 @@
 package commands.concreteCommand;
 
 import commands.Command;
+import commands.CommandArgsChecker;
 import commands.Invoker;
-import exceptions.InvalidCommandException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class ExecuteScriptCommand implements Command {
-
     /** Поле, отвечающее за работу счетчика повтора выполнения команды execute_script */
     private static int recursionChecker = 0;
     /** Поле, отвечающее за остановку выполнения команды execute_script при достижении 10 её повторов */
     private boolean recursion = false;
-
     /**Метод, считывающий команды из файла
      * @see ExecuteScriptCommand#invokerFromFile(Scanner) */
     private void executorFromFile(String file) throws FileNotFoundException {
@@ -58,25 +56,20 @@ public class ExecuteScriptCommand implements Command {
      * @see ExecuteScriptCommand#executorFromFile(String) */
     @Override
     public void execute() {
+        CommandArgsChecker.commandArgsChecker(1);
+        String file = Invoker.getSplit()[1];
+        file = tildaResolver(file);
         try {
-            if (Invoker.getSplit().length == 2) {
-                String file = Invoker.getSplit()[1];
-                file = tildaResolver(file);
-                try {
-                    if (new File(file).exists() & new File(file).canRead()) {
-                        recursion = false;
-                        ++recursionChecker;
-                        executorFromFile(file);
-                    } else {
-                        System.out.println("Нет доступа к файлу");
-                    }
-                } catch (FileNotFoundException fileNotFoundException) {
-                    System.out.println("Файл не найден");
-                }
+            if (new File(file).exists() & new File(file).canRead()) {
+                recursion = false;
+                ++recursionChecker;
+                executorFromFile(file);
             } else {
-                throw new InvalidCommandException();
+                System.out.println("Нет доступа к файлу");
             }
-        } catch (InvalidCommandException e){System.out.println(e.getMessage());}
+        } catch (FileNotFoundException fileNotFoundException) {
+            System.out.println("Файл не найден");
+        }
     }
     @Override
     public String description() {

@@ -1,24 +1,39 @@
 package allForDragons;
 
 import database.DatabaseConnection;
+import database.UserAuthentication;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
 public class Dragon implements Comparable<Dragon>{
-    private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    private final long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
-    private Coordinates coordinates; //Поле не может быть null
+    private final Coordinates coordinates; //Поле не может быть null
     private final java.util.Date creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private Long age; //Значение поля должно быть больше 0, Поле не может быть null
     private Color color; //Поле может быть null
     private DragonType type; //Поле не может быть null
     private DragonCharacter character; //Поле может быть null
-    private DragonHead head;
-    private String creator;
-    public Dragon(String name, Coordinates coordinates, Long age, Color color, DragonType type, DragonCharacter character, DragonHead head, String creator) {
-        setId();
+    private final DragonHead head;
+    private final String creator;
+    /** Конструктор для создания нового дракона из консоли */
+    public Dragon(String name, Coordinates coordinates, Long age, Color color, DragonType type, DragonCharacter character, DragonHead head) {
+        this.id = setId();
         creationDate = new Date();
+        this.name = name;
+        this.age = age;
+        this.coordinates = coordinates;
+        this.character = character;
+        this.head = head;
+        this.type = type;
+        this.color = color;
+        creator = UserAuthentication.getCurrentUser();
+    }
+    /** Конструктор для создания нового дракона из базы данных */
+    public Dragon(String name, Coordinates coordinates, Long age, Color color, DragonType type, DragonCharacter character, DragonHead head, String creator, Date creationDate, Long id) {
+        this.id = id;
+        this.creationDate = creationDate;
         this.name = name;
         this.age = age;
         this.coordinates = coordinates;
@@ -28,14 +43,16 @@ public class Dragon implements Comparable<Dragon>{
         this.color = color;
         this.creator = creator;
     }
-    private void setId() {
+    private long setId() {
+        long newId = 0;
         ResultSet resultSet = DatabaseConnection.executePreparedStatement("SELECT nextval(?)", "id");
         try {
             resultSet.next();
-            id = resultSet.getLong(1);
+            newId = resultSet.getLong(1);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return newId;
     }
     public long getId() {
         return id;
@@ -57,6 +74,9 @@ public class Dragon implements Comparable<Dragon>{
     }
     public DragonCharacter getCharacter() {
         return character;
+    }
+    public Date getCreationDate() {
+        return creationDate;
     }
     public DragonHead getHead() {
         return head;

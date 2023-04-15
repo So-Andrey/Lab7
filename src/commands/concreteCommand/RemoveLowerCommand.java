@@ -2,8 +2,8 @@ package commands.concreteCommand;
 
 import allForDragons.*;
 import commands.Command;
+import commands.CommandArgsChecker;
 import commands.Invoker;
-import exceptions.InvalidCommandException;
 import java.util.List;
 
 public class RemoveLowerCommand implements Command {
@@ -22,18 +22,14 @@ public class RemoveLowerCommand implements Command {
      * @see RemoveLowerCommand#removerLower(Dragon)  */
     @Override
     public void execute() {
+        CommandArgsChecker.commandArgsChecker(1);
         try {
-            if (Invoker.getSplit().length != 2) {
-                throw new InvalidCommandException();
-            }
-            try {
-                List<Dragon> matchedDragons = DragonsCollection.getDragons().stream().filter(dragon -> dragon.getId() == Long.parseLong(Invoker.getSplit()[1])).toList();
-                if (matchedDragons.isEmpty()) System.out.println("Заданного дракона не существует");
-                else removerLower(matchedDragons.get(0));
-            } catch (NumberFormatException ex) {
-                throw new InvalidCommandException();
-            }
-        } catch (InvalidCommandException e) { System.out.println(e.getMessage()); }
+            List<Dragon> matchedDragons = DragonsCollection.getDragons().stream().filter(dragon -> dragon.getId() == Long.parseLong(Invoker.getSplit()[1])).toList();
+            if (matchedDragons.isEmpty()) System.out.println("Заданного дракона не существует");
+            else removerLower(matchedDragons.get(0));
+        } catch (NumberFormatException ex) {
+            throw new NullPointerException();
+        }
     }
     @Override
     public String description() {

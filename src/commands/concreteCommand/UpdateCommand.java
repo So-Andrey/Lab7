@@ -2,9 +2,9 @@ package commands.concreteCommand;
 
 import allForDragons.*;
 import commands.Command;
+import commands.CommandArgsChecker;
 import commands.Invoker;
 import exceptions.IllegalValueOfXException;
-import exceptions.InvalidCommandException;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -230,21 +230,16 @@ public class UpdateCommand implements Command {
      * @see UpdateCommand#updateDragon(long) */
     @Override
     public void execute() {
+        CommandArgsChecker.commandArgsChecker(1);
         try {
-            if (Invoker.getSplit().length != 2) {
-                throw new InvalidCommandException();
+            if (!DragonsCollection.getDragons().isEmpty()) {
+                updateDragon(Long.parseLong(Invoker.getSplit()[1]));
+            } else {
+                System.out.println("Такого дракона не существует");
             }
-            try {
-                if (!DragonsCollection.getDragons().isEmpty()) {
-                    updateDragon(Long.parseLong(Invoker.getSplit()[1]));
-                } else {
-                    System.out.println("Такого дракона не существует");
-                }
-            } catch (NumberFormatException ex) {
-                throw new InvalidCommandException();
-            }
-
-        } catch (InvalidCommandException e) { System.out.println(e.getMessage()); }
+        } catch (NumberFormatException ex) {
+            throw new NullPointerException();
+        }
     }
     /** Метод, обновляющий дракона параметрами из файла
      * @see UpdateCommand#parametersReader(Scanner)

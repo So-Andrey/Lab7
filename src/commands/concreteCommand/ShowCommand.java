@@ -2,23 +2,18 @@ package commands.concreteCommand;
 
 import commands.Command;
 import allForDragons.*;
-import commands.Invoker;
-import exceptions.InvalidCommandException;
+import commands.CommandArgsChecker;
 
 public class ShowCommand implements Command {
     /**Метод, выводящий все элементы коллекции*/
     @Override
     public void execute() {
-        try {
-            if(Invoker.getSplit().length != 1){
-                throw new InvalidCommandException();
-            }
-            if (DragonsCollection.getDragons().isEmpty()) {
-                System.out.println("Коллекция пуста");
-            } else {
-                DragonsCollection.getDragons().forEach(System.out::println);
-            }
-        } catch (InvalidCommandException e) { System.out.println(e.getMessage()); }
+        CommandArgsChecker.commandArgsChecker(0);
+        if (DragonsCollection.getDragons().isEmpty()) {
+            System.out.println("Коллекция пуста");
+        } else {
+            DragonsCollection.getDragons().forEach(System.out::println);
+        }
     }
     @Override
     public String description() {

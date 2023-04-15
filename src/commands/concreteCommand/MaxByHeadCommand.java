@@ -2,12 +2,10 @@ package commands.concreteCommand;
 
 import allForDragons.DragonsCollection;
 import commands.Command;
-import commands.Invoker;
-import exceptions.InvalidCommandException;
+import commands.CommandArgsChecker;
 
 public class MaxByHeadCommand implements Command {
-
-    /**Метод, выводящий дракона с максимальным значением head */
+    /** Метод, выводящий дракона с максимальным значением head */
     private void maxByHeadPrinter() {
         System.out.println(DragonsCollection.getDragons().stream().max((dragon1, dragon2) -> (int)Math.signum(dragon1.getHead().getEyesCount() - dragon2.getHead().getEyesCount())).get());
     }
@@ -15,16 +13,12 @@ public class MaxByHeadCommand implements Command {
      * @see MaxByHeadCommand#maxByHeadPrinter() */
     @Override
     public void execute() {
-        try {
-            if(Invoker.getSplit().length != 1){
-                throw new InvalidCommandException();
-            }
-            if (DragonsCollection.getDragons().size() != 0) {
-                maxByHeadPrinter();
-            } else {
-                System.out.println("Коллекция пуста");
-            }
-        } catch (InvalidCommandException e) { System.out.println(e.getMessage()); }
+        CommandArgsChecker.commandArgsChecker(0);
+        if (DragonsCollection.getDragons().size() != 0) {
+            maxByHeadPrinter();
+        } else {
+            System.out.println("Коллекция пуста");
+        }
     }
     @Override
     public String description() {

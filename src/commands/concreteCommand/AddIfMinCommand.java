@@ -2,8 +2,7 @@ package commands.concreteCommand;
 
 import allForDragons.*;
 import commands.Command;
-import commands.Invoker;
-import exceptions.InvalidCommandException;
+import commands.CommandArgsChecker;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -13,12 +12,8 @@ public class AddIfMinCommand implements Command {
      * @see AddIfMinCommand#ifMinAdder(Dragon) */
     @Override
     public void execute() {
-        try {
-            if (Invoker.getSplit().length != 1) {
-                throw new InvalidCommandException();
-            }
-            ifMinAdder(DragonAdder.dragonAdder());
-        } catch (InvalidCommandException e) { System.out.println(e.getMessage()); }
+        CommandArgsChecker.commandArgsChecker(0);
+        ifMinAdder(DragonAdder.dragonAdder());
     }
     /** Метод, выполняющий команду add_if_min из файла
      * @see DragonAdder#dragonFromFileAdder(Scanner)

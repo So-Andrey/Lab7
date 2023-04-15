@@ -3,8 +3,8 @@ package commands.concreteCommand;
 import allForDragons.Dragon;
 import allForDragons.DragonsCollection;
 import commands.Command;
+import commands.CommandArgsChecker;
 import commands.Invoker;
-import exceptions.InvalidCommandException;
 import java.util.List;
 
 public class RemoveByIdCommand implements Command {
@@ -23,16 +23,12 @@ public class RemoveByIdCommand implements Command {
      * @see RemoveByIdCommand#removerById(long) */
     @Override
     public void execute() {
+        CommandArgsChecker.commandArgsChecker(1);
         try {
-            if (Invoker.getSplit().length != 2) {
-                throw new InvalidCommandException();
-            }
-            try {
-                removerById(Long.parseLong(Invoker.getSplit()[1]));
-            } catch (NumberFormatException ex) {
-                throw new InvalidCommandException();
-            }
-        } catch (InvalidCommandException e) { System.out.println(e.getMessage()); }
+            removerById(Long.parseLong(Invoker.getSplit()[1]));
+        } catch (NumberFormatException ex) {
+            throw new NullPointerException();
+        }
     }
     @Override
     public String description() {
