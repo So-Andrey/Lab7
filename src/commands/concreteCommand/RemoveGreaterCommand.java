@@ -4,18 +4,22 @@ import allForDragons.*;
 import commands.Command;
 import commands.CommandArgsChecker;
 import commands.Invoker;
+import database.DatabaseConnection;
 import java.util.List;
 
 public class RemoveGreaterCommand implements Command {
     /**Метод, удаляющий из коллекции всех драконов старше заданного
-     * @param thisDragon заданный дракон*/
+     * @param thisDragon заданный дракон
+     * @see DragonsCollection#updateFromDB()
+     * @see DatabaseConnection#executeStatement(String) */
     private void removerGreater(Dragon thisDragon) {
         List<Dragon> greaterDragons = DragonsCollection.getDragons().stream().filter(dragon -> dragon.getAge() > thisDragon.getAge()).toList();
         if (greaterDragons.isEmpty()) {
             System.out.println("Драконов старше заданного не существует");
         } else {
-            greaterDragons.forEach(dragon -> DragonsCollection.getDragons().remove(dragon));
-            System.out.println("Количество удалённых драконов " + greaterDragons.size());
+            greaterDragons.forEach(dragon -> DatabaseConnection.executeStatement("delete from dragons where id = " + dragon.getId()));
+            DragonsCollection.updateFromDB();
+            System.out.println("Количество удалённых драконов: " + greaterDragons.size());
         }
     }
     /**Метод, находящий заданного дракона в коллекции и вызывающий метод removerGreater

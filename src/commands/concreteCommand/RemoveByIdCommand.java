@@ -5,17 +5,21 @@ import allForDragons.DragonsCollection;
 import commands.Command;
 import commands.CommandArgsChecker;
 import commands.Invoker;
+import database.DatabaseConnection;
 import java.util.List;
 
 public class RemoveByIdCommand implements Command {
     /**Метод, удаляющий дракона по значению id
-     * @param id дракона, которого надо удалить*/
+     * @param id дракона, которого надо удалить
+     * @see DatabaseConnection#executeStatement(String)
+     * @see DragonsCollection#updateFromDB() */
     private void removerById(long id) {
         List<Dragon> matchedDragon = DragonsCollection.getDragons().stream().filter((dragon -> dragon.getId() == id)).toList();
         if (matchedDragon.isEmpty()) {
             System.out.println("Такого дракона не существует");
         } else {
-            DragonsCollection.getDragons().remove(matchedDragon.get(0));
+            DatabaseConnection.executeStatement("delete from dragons where id = " + matchedDragon.get(0).getId());
+            DragonsCollection.updateFromDB();
             System.out.println("Дракон успешно удалён");
         }
     }
