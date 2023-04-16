@@ -26,8 +26,8 @@ public class DragonAdder {
         float y = 0;
         Color dragonColor = null;
         long age = Long.parseLong("0");
-        DragonType dragonType = DragonType.WATER;
-        DragonCharacter dragonCharacter = DragonCharacter.FICKLE;
+        DragonType dragonType = null;
+        DragonCharacter dragonCharacter = null;
         double eyesCount = Double.parseDouble("0");
         int i = 1;
         while (i != 0) {
@@ -105,7 +105,7 @@ public class DragonAdder {
                 while (i == 7) {
                     System.out.println("Введите характер дракона (Цифру или полное название) 1 - CUNNING, 2 - WISE, 3 - CHAOTIC_EVIL, 4 - FICKLE");
                     String character = sc.nextLine();
-                    if (!(character.matches("[1-4]")||character.equals("CUNNING")||character.equals("WISE")||character.equals("CHAOTIC_EVIL")||character.equals("FICKLE"))) {
+                    if (!(character.matches("[1-4]")||character.equals("CUNNING")||character.equals("WISE")||character.equals("CHAOTIC_EVIL")||character.equals("FICKLE")||character.isEmpty())) {
                         throw new InputMismatchException();
                     }
                     switch (character) {
@@ -237,7 +237,7 @@ public class DragonAdder {
     /** Метод, проверяющий характер нового дракона
      * @return DragonCharacter */
     private static DragonCharacter characterFromFileChecker(String character) {
-        if (!(character.matches("[1-4]")||character.equals("CUNNING")||character.equals("WISE")||character.equals("CHAOTIC_EVIL")||character.equals("FICKLE"))) {
+        if (!(character.matches("[1-4]")||character.equals("CUNNING")||character.equals("WISE")||character.equals("CHAOTIC_EVIL")||character.equals("FICKLE")||character.isEmpty())) {
             throw new InputMismatchException();
         }
         DragonCharacter dragonCharacter = null;

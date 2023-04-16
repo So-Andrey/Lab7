@@ -29,9 +29,21 @@ public class DragonsCollection {
                     java.sql.Date creationDate = new java.sql.Date(resultSet.getLong(3));
                     String name = resultSet.getString(4);
                     long age = resultSet.getLong(5);
-                    Color color = Color.valueOf(resultSet.getString(6));
+                    String colorString = resultSet.getString(6);
+                    Color color;
+                    if (colorString.equals("null")) {
+                        color = null;
+                    } else {
+                        color = Color.valueOf(colorString);
+                    }
                     DragonType type = DragonType.valueOf(resultSet.getString(7));
-                    DragonCharacter character = DragonCharacter.valueOf(resultSet.getString(8));
+                    String characterString = resultSet.getString(8);
+                    DragonCharacter character;
+                    if (characterString.equals("null")) {
+                        character = null;
+                    } else {
+                        character = DragonCharacter.valueOf(characterString);
+                    }
                     double eyesCount = resultSet.getDouble(9);
                     long x = resultSet.getLong(10);
                     float y = resultSet.getFloat(11);

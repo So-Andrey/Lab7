@@ -4,7 +4,11 @@ import allForDragons.*;
 import commands.Command;
 import commands.CommandArgsChecker;
 import commands.Invoker;
+import database.DatabaseConnection;
+import database.UserAuthentication;
 import exceptions.IllegalValueOfXException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -17,9 +21,9 @@ public class UpdateCommand implements Command {
         boolean i = true;
         while (i) {
             System.out.println("Введите имя дракона");
-            String name = scanner.nextLine();
+            String name = scanner.nextLine().trim();
             if (!name.trim().isEmpty()) {
-                dragon.setName(name);
+                DatabaseConnection.executeStatement("update dragons set name = '" + name + "' where id = " + dragon.getId());
                 i = false;
             } else {
                 System.out.println("Неверный тип данных");
@@ -32,12 +36,10 @@ public class UpdateCommand implements Command {
         boolean i = true;
         while (i) {
             System.out.println("Введите новый возраст дракона");
-            String string = scanner.nextLine();
-            if (string.matches("([-+]?\\d+)")) {
-                long age = Long.parseLong(string);
-                dragon.setAge(age);
+            try {
+                DatabaseConnection.executeStatement("update dragons set age = '" + Long.parseLong(scanner.nextLine().trim()) + "' where id = " + dragon.getId());
                 i = false;
-            } else {
+            } catch (NumberFormatException numberFormatException) {
                 System.out.println("Неверный тип данных");
             }
         }
@@ -48,13 +50,14 @@ public class UpdateCommand implements Command {
         boolean i = true;
         while (i) {
             System.out.println("Введите новый тип дракона (Цифру или полное название) 1 - WATER, 2 - UNDERGROUND, 3 - FIRE");
-            String type = scanner.nextLine();
+            String type = scanner.nextLine().trim();
             if (type.matches("[1-3]") || type.equals("WATER") || type.equals("UNDERGROUND") || type.equals("FIRE")) {
                 switch (type) {
-                    case "1", "WATER" -> dragon.setType(DragonType.WATER);
-                    case "2", "UNDERGROUND" -> dragon.setType(DragonType.UNDERGROUND);
-                    case "3", "FIRE" -> dragon.setType(DragonType.FIRE);
+                    case "1" -> type = "WATER";
+                    case "2" -> type = "UNDERGROUND";
+                    case "3" -> type = "FIRE";
                 }
+                DatabaseConnection.executeStatement("update dragons set type = '" + type + "' where id = " + dragon.getId());
                 i = false;
             } else {
                 System.out.println("Неверный тип данных");
@@ -67,14 +70,15 @@ public class UpdateCommand implements Command {
         boolean i = true;
         while (i) {
             System.out.println("Введите новый цвет дракона (Цифру или полное название) 1 - GREEN, 2 - ORANGE, 3 - BROWN");
-            String color = scanner.nextLine();
+            String color = scanner.nextLine().trim();
             if (color.matches("[1-3]") || color.equals("GREEN") || color.equals("ORANGE") || color.equals("BROWN") || color.isEmpty()) {
                 switch (color) {
-                    case "1", "GREEN" -> dragon.setColor(Color.GREEN);
-                    case "2", "ORANGE" -> dragon.setColor(Color.ORANGE);
-                    case "3", "BROWN" -> dragon.setColor(Color.BROWN);
-                    case "" -> dragon.setColor(null);
+                    case "1" -> color = "GREEN";
+                    case "2" -> color = "ORANGE";
+                    case "3" -> color = "BROWN";
+                    case "" -> color = "null";
                 }
+                DatabaseConnection.executeStatement("update dragons set color = '" + color + "' where id = " + dragon.getId());
                 i = false;
             } else {
                 System.out.println("Неверный тип данных");
@@ -87,14 +91,16 @@ public class UpdateCommand implements Command {
         boolean i = true;
         while (i) {
             System.out.println("Введите новый характер дракона (Цифру или полное название) 1 - CUNNING, 2 - WISE, 3 - CHAOTIC_EVIL, 4 - FICKLE");
-            String character = scanner.nextLine();
-            if (character.matches("[1-4]") || character.equals("CUNNING") || character.equals("WISE") || character.equals("CHAOTIC_EVIL") || character.equals("FICKLE")) {
+            String character = scanner.nextLine().trim();
+            if (character.matches("[1-4]") || character.equals("CUNNING") || character.equals("WISE") || character.equals("CHAOTIC_EVIL") || character.equals("FICKLE") || character.isEmpty()) {
                 switch (character) {
-                    case "1", "CUNNING" -> dragon.setCharacter(DragonCharacter.CUNNING);
-                    case "2", "WISE" -> dragon.setCharacter(DragonCharacter.WISE);
-                    case "3", "CHAOTIC_EVIL" -> dragon.setCharacter(DragonCharacter.CHAOTIC_EVIL);
-                    case "4", "FICKLE" -> dragon.setCharacter(DragonCharacter.FICKLE);
+                    case "1" -> character = "CUNNING";
+                    case "2" -> character = "WISE";
+                    case "3" -> character = "CHAOTIC_EVIL";
+                    case "4" -> character = "FICKLE";
+                    case "" -> character = "null";
                 }
+                DatabaseConnection.executeStatement("update dragons set character = '" + character + "' where id = " + dragon.getId());
                 i = false;
             } else {
                 System.out.println("Неверный тип данных");
@@ -107,9 +113,9 @@ public class UpdateCommand implements Command {
         boolean i = true;
         while (i) {
             System.out.println("Введите новое количество глаз дракона");
-            String string = scanner.nextLine();
+            String string = scanner.nextLine().trim();
             try {
-                dragon.getHead().setEyesCount(Double.parseDouble(string));
+                DatabaseConnection.executeStatement("update dragons set eyescount = '" + Double.parseDouble(string) + "' where id = " + dragon.getId());
                 i = false;
             } catch (NumberFormatException numberFormatException) {
                 System.out.println("Неверный тип данных");
@@ -121,8 +127,8 @@ public class UpdateCommand implements Command {
      * @see UpdateCommand#getNewXCoordinate(Scanner)
      * @see UpdateCommand#getNewYCoordinate(Scanner) */
     private void updateCoordinates(Scanner scanner, Dragon dragon) {
-        dragon.getCoordinates().setX(getNewXCoordinate(scanner));
-        dragon.getCoordinates().setY(getNewYCoordinate(scanner));
+        DatabaseConnection.executeStatement("update dragons set x = '" + getNewXCoordinate(scanner) + "' where id = " + dragon.getId());
+        DatabaseConnection.executeStatement("update dragons set y = '" + getNewYCoordinate(scanner) + "' where id = " + dragon.getId());
     }
     /**Метод, получающий новую координату х
      * @return возвращает координату х*/
@@ -131,7 +137,7 @@ public class UpdateCommand implements Command {
         boolean i = true;
         while (i) {
             System.out.println("Введите новую координату X дракона");
-            String xString = scanner.nextLine();
+            String xString = scanner.nextLine().trim();
             try {
                 if (xString.matches("([-+]?\\d+)")) {
                     x = Long.parseLong(xString);
@@ -156,7 +162,7 @@ public class UpdateCommand implements Command {
         boolean i = true;
         while (i) {
             System.out.println("Введите новую координату Y дракона");
-            String yString = scanner.nextLine();
+            String yString = scanner.nextLine().trim();
             try {
                 y = Float.parseFloat(yString);
                 i = false;
@@ -181,7 +187,7 @@ public class UpdateCommand implements Command {
                                     Характер - введите 5
                                     Количество глаз - введите 6
                                     Координаты - введите 7""");
-            s = scanner.nextLine();
+            s = scanner.nextLine().trim();
             i = false;
         }
         return s;
@@ -206,6 +212,7 @@ public class UpdateCommand implements Command {
             case "6" -> updateHead(scanner, dragon);
             case "7" -> updateCoordinates(scanner, dragon);
         }
+        DragonsCollection.updateFromDB();
         System.out.println("Параметр дракона успешно обновлён");
     }
     /**Метод, обновляющий данные о драконе
@@ -217,12 +224,19 @@ public class UpdateCommand implements Command {
         if (matchedDragon.isEmpty()) {
             System.out.println("Такого дракона не существует");
         } else {
-            Scanner scanner = new Scanner(System.in);
-            String s = requestInput(scanner);
-            if (!(s.matches("[1-7]"))) {
-                System.out.println("Неверный параметр");
-            } else {
-                fieldsUpdater(s, scanner, matchedDragon.get(0));
+            try {
+                ResultSet resultSet = DatabaseConnection.executePreparedStatement("select * from dragons where id = " + matchedDragon.get(0).getId() + " and creator = '" + UserAuthentication.getCurrentUser() + "'");
+                resultSet.next();
+                resultSet.getLong(1);
+                Scanner scanner = new Scanner(System.in);
+                String s = requestInput(scanner);
+                if (!(s.matches("[1-7]"))) {
+                    System.out.println("Неверный параметр");
+                } else {
+                    fieldsUpdater(s, scanner, matchedDragon.get(0));
+                }
+            } catch (SQLException sqlException) {
+                System.out.println("Вы не можете изменить дракона созданного другим пользователем");
             }
         }
     }
@@ -253,7 +267,14 @@ public class UpdateCommand implements Command {
                 if (matchedDragon.isEmpty()) {
                     throw new InputMismatchException();
                 } else {
-                    fieldsUpdaterFromFile(parameters[0], parameters[1], matchedDragon.get(0), scanner);
+                    try {
+                        ResultSet resultSet = DatabaseConnection.executePreparedStatement("select * from dragons where id = " + matchedDragon.get(0).getId() + " and creator = '" + UserAuthentication.getCurrentUser() + "'");
+                        resultSet.next();
+                        resultSet.getLong(1);
+                        fieldsUpdaterFromFile(parameters[0], parameters[1], matchedDragon.get(0), scanner);
+                    } catch (SQLException sqlException) {
+                        throw new InputMismatchException();
+                    }
                 }
             } catch (NumberFormatException numberFormatException) {
                 throw new InputMismatchException();
@@ -293,6 +314,7 @@ public class UpdateCommand implements Command {
                 case "6" -> updateHeadFromFile(newValue, dragon);
                 case "7" -> updateCoordinatesFromFile(newValue, scanner, dragon);
             }
+            DragonsCollection.putDragonsFromDB();
             System.out.println("Параметр дракона успешно обновлён");
         } else {
             throw new InputMismatchException();
@@ -301,7 +323,7 @@ public class UpdateCommand implements Command {
     /** Метод, обновляющий имя дракона на новое из файла */
     private static void updateNameFromFile(String name, Dragon dragon) {
         if (!name.trim().isEmpty()) {
-            dragon.setName(name);
+            DatabaseConnection.executeStatement("update dragons set name = '" + name + "' where id = " + dragon.getId());
         } else {
             throw new InputMismatchException();
         }
@@ -309,8 +331,7 @@ public class UpdateCommand implements Command {
     /** Метод, обновляющий возраст дракона на новый из файла */
     private static void updateAgeFromFile(String ageString, Dragon dragon) {
         try {
-            long age = Long.parseLong(ageString);
-            dragon.setAge(age);
+            DatabaseConnection.executeStatement("update dragons set age = '" + Long.parseLong(ageString) + "' where id = " + dragon.getId());
         } catch (NumberFormatException numberFormatException) {
             throw new InputMismatchException();
         }
@@ -319,10 +340,11 @@ public class UpdateCommand implements Command {
     private static void updateTypeFromFile(String type, Dragon dragon) {
         if (type.matches("[1-3]") || type.equals("WATER") || type.equals("UNDERGROUND") || type.equals("FIRE")) {
             switch (type) {
-                case "1", "WATER" -> dragon.setType(DragonType.WATER);
-                case "2", "UNDERGROUND" -> dragon.setType(DragonType.UNDERGROUND);
-                case "3", "FIRE" -> dragon.setType(DragonType.FIRE);
+                case "1" -> type = "WATER";
+                case "2" -> type = "UNDERGROUND";
+                case "3" -> type = "FIRE";
             }
+            DatabaseConnection.executeStatement("update dragons set type = '" + type + "' where id = " + dragon.getId());
         } else {
             throw new InputMismatchException();
         }
@@ -331,24 +353,27 @@ public class UpdateCommand implements Command {
     private static void updateColorFromFile(String color, Dragon dragon) {
         if (color.matches("[1-3]") || color.equals("GREEN") || color.equals("ORANGE") || color.equals("BROWN") || color.isEmpty()) {
             switch (color) {
-                case "1", "GREEN" -> dragon.setColor(Color.GREEN);
-                case "2", "ORANGE" -> dragon.setColor(Color.ORANGE);
-                case "3", "BROWN" -> dragon.setColor(Color.BROWN);
-                case "" -> dragon.setColor(null);
+                case "1" -> color = "GREEN";
+                case "2" -> color = "ORANGE";
+                case "3" -> color = "BROWN";
+                case "" -> color = "null";
             }
+            DatabaseConnection.executeStatement("update dragons set color = '" + color + "' where id = " + dragon.getId());
         } else {
             throw new InputMismatchException();
         }
     }
     /** Метод, обновляющий характер дракона на новый из файла */
     private static void updateCharacterFromFile(String character, Dragon dragon) {
-        if (character.matches("[1-4]") || character.equals("CUNNING") || character.equals("WISE") || character.equals("CHAOTIC_EVIL") || character.equals("FICKLE")) {
+        if (character.matches("[1-4]") || character.equals("CUNNING") || character.equals("WISE") || character.equals("CHAOTIC_EVIL") || character.equals("FICKLE") || character.isEmpty()) {
             switch (character) {
-                case "1", "CUNNING" -> dragon.setCharacter(DragonCharacter.CUNNING);
-                case "2", "WISE" -> dragon.setCharacter(DragonCharacter.WISE);
-                case "3", "CHAOTIC_EVIL" -> dragon.setCharacter(DragonCharacter.CHAOTIC_EVIL);
-                case "4", "FICKLE" -> dragon.setCharacter(DragonCharacter.FICKLE);
+                case "1" -> character = "CUNNING";
+                case "2" -> character = "WISE";
+                case "3" -> character = "CHAOTIC_EVIL";
+                case "4" -> character = "FICKLE";
+                case "" -> character = "null";
             }
+            DatabaseConnection.executeStatement("update dragons set character = '" + character + "' where id = " + dragon.getId());
         } else {
             throw new InputMismatchException();
         }
@@ -356,7 +381,7 @@ public class UpdateCommand implements Command {
     /** Метод, обновляющий количество глаз дракона на новое из файла */
     private static void updateHeadFromFile(String eyesCount, Dragon dragon) {
         try {
-            dragon.getHead().setEyesCount(Double.parseDouble(eyesCount));
+            DatabaseConnection.executeStatement("update dragons set eyescount = '" + Double.parseDouble(eyesCount) + "' where id = " + dragon.getId());
         } catch (NumberFormatException numberFormatException) {
             throw new InputMismatchException();
         }
@@ -372,12 +397,11 @@ public class UpdateCommand implements Command {
         if (x > 610) {
             throw new InputMismatchException();
         }
-        dragon.getCoordinates().setX(x);
         try {
             String yString = scanner.nextLine();
             try {
-                float y = Float.parseFloat(yString);
-                dragon.getCoordinates().setY(y);
+                DatabaseConnection.executeStatement("update dragons set y = '" + Float.parseFloat(yString) + "' where id = " + dragon.getId());
+                DatabaseConnection.executeStatement("update dragons set x = '" + x + "' where id = " + dragon.getId());
             } catch (NumberFormatException numberFormatException) {
                 throw new InputMismatchException();
             }
