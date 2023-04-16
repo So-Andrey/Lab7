@@ -5,6 +5,7 @@ import commands.Command;
 import commands.CommandArgsChecker;
 import commands.Invoker;
 import database.DatabaseConnection;
+import database.UserAuthentication;
 import java.util.List;
 
 public class RemoveGreaterCommand implements Command {
@@ -17,9 +18,10 @@ public class RemoveGreaterCommand implements Command {
         if (greaterDragons.isEmpty()) {
             System.out.println("Драконов старше заданного не существует");
         } else {
-            greaterDragons.forEach(dragon -> DatabaseConnection.executeStatement("delete from dragons where id = " + dragon.getId()));
+            int beforeSize = DragonsCollection.getDragons().size();
+            greaterDragons.forEach(dragon -> DatabaseConnection.executeStatement("delete from dragons where id = " + dragon.getId() + " and creator = '" + UserAuthentication.getCurrentUser() + "'"));
             DragonsCollection.updateFromDB();
-            System.out.println("Количество удалённых драконов: " + greaterDragons.size());
+            System.out.println("Количество удалённых драконов: " + (beforeSize - DragonsCollection.getDragons().size()) + "\nP.S. (Вы можете удалять только тех драконов, создателем которых являетесь)");
         }
     }
     /**Метод, находящий заданного дракона в коллекции и вызывающий метод removerGreater

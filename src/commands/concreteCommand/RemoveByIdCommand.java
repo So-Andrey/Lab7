@@ -6,6 +6,7 @@ import commands.Command;
 import commands.CommandArgsChecker;
 import commands.Invoker;
 import database.DatabaseConnection;
+import database.UserAuthentication;
 import java.util.List;
 
 public class RemoveByIdCommand implements Command {
@@ -18,9 +19,14 @@ public class RemoveByIdCommand implements Command {
         if (matchedDragon.isEmpty()) {
             System.out.println("Такого дракона не существует");
         } else {
-            DatabaseConnection.executeStatement("delete from dragons where id = " + matchedDragon.get(0).getId());
+            int beforeSize = DragonsCollection.getDragons().size();
+            DatabaseConnection.executeStatement("delete from dragons where id = " + matchedDragon.get(0).getId() + " and creator = '" + UserAuthentication.getCurrentUser() + "'");
             DragonsCollection.updateFromDB();
-            System.out.println("Дракон успешно удалён");
+            if (beforeSize == DragonsCollection.getDragons().size()) {
+                System.out.println("Вы не можете удалить этого дракона, так как он создан другим пользователем");
+            } else {
+                System.out.println("Дракон успешно удалён");
+            }
         }
     }
     /**Выполняет команду с помощью removerById

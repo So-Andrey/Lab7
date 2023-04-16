@@ -5,6 +5,7 @@ import commands.Command;
 import commands.CommandArgsChecker;
 import commands.Invoker;
 import database.DatabaseConnection;
+import database.UserAuthentication;
 import java.util.List;
 
 public class RemoveLowerCommand implements Command {
@@ -13,13 +14,14 @@ public class RemoveLowerCommand implements Command {
      * @see DragonsCollection#updateFromDB()
      * @see DatabaseConnection#executeStatement(String) */
     private void removerLower(Dragon thisDragon) {
-        List<Dragon> greaterDragons = DragonsCollection.getDragons().stream().filter(dragon -> dragon.getAge() < thisDragon.getAge()).toList();
-        if (greaterDragons.isEmpty()) {
+        List<Dragon> lowerDragons = DragonsCollection.getDragons().stream().filter(dragon -> dragon.getAge() < thisDragon.getAge()).toList();
+        if (lowerDragons.isEmpty()) {
             System.out.println("Драконов младше заданного не существует");
         } else {
-            greaterDragons.forEach(dragon -> DatabaseConnection.executeStatement("delete from dragons where id = " + dragon.getId()));
+            int beforeSize = DragonsCollection.getDragons().size();
+            lowerDragons.forEach(dragon -> DatabaseConnection.executeStatement("delete from dragons where id = " + dragon.getId() + " and creator = '" + UserAuthentication.getCurrentUser() + "'"));
             DragonsCollection.updateFromDB();
-            System.out.println("Количество удалённых драконов: " + greaterDragons.size());
+            System.out.println("Количество удалённых драконов: " + (beforeSize - DragonsCollection.getDragons().size()) + "\nP.S. (Вы можете удалять только тех драконов, создателем которых являетесь)");
         }
     }
     /**Метод, находящий заданного дракона в коллекции и вызывающий метод removerLower

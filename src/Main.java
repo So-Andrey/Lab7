@@ -1,9 +1,11 @@
 import allForDragons.*;
 import commands.Invoker;
+import database.DatabaseConnection;
 import database.UserAuthentication;
 
 public class Main {
     public static void main(String[] args) {
+        DatabaseConnection.createTablesIfNotExist();
         UserAuthentication.userAuthentication();
         if (UserAuthentication.getCurrentUser() != null) {
             DragonsCollection.putDragonsFromDB();
