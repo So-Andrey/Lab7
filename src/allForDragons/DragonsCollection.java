@@ -5,14 +5,14 @@ import java.sql.ResultSet;
 import java.util.*;
 
 public class DragonsCollection {
-    /** Статическая коллекция драконов, с которой работают все команды в программе */
+    /** Статическая коллекция драконов, с которой работают команды в программе */
     private static final LinkedHashSet<Dragon> dragons = new LinkedHashSet<>();
     /** Поле, содержащее дату инициализации коллекции */
     private static final Date dateOfInitialization = new Date();
     public static LinkedHashSet<Dragon> getDragons() {
         return dragons;
     }
-    /**Метод, выводящий информацию о коллекции*/
+    /** Метод, выводящий информацию о коллекции */
     public static void getInfo() {
         System.out.println("Тип коллекции: " + dragons.getClass().getTypeName().split(".util.")[1] + "\n" +
                 "Дата инициализации: " + dateOfInitialization + "\n" +
@@ -52,6 +52,7 @@ public class DragonsCollection {
             }
         } catch (Exception ignored) {}
     }
+    /** Метод для обновления данных в коллекции */
     public static void updateFromDB() {
         dragons.clear();
         putDragonsFromDB();

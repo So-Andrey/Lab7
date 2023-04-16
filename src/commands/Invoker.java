@@ -41,7 +41,8 @@ public class Invoker {
     public static HashMap<String, Command> getCommandHashMap() {
         return commandHashMap;
     }
-    /** Метод, реализующий работу с консолью */
+    /** Метод, реализующий работу с консолью
+     * @see Command#execute() */
     public static void invoker() {
         System.out.println("Введите команду (help : вывести справку по доступным командам)");
         Scanner scanner = new Scanner(System.in);

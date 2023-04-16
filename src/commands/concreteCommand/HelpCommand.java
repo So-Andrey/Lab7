@@ -5,7 +5,9 @@ import commands.CommandArgsChecker;
 import commands.Invoker;
 
 public class HelpCommand implements Command {
-    /** Метод, выводящий справку по командам*/
+    /** Метод, выводящий справку по командам
+     * @see CommandArgsChecker#commandArgsChecker(int)
+     * @see Invoker#getCommandHashMap() */
     @Override
     public void execute() {
         CommandArgsChecker.commandArgsChecker(0);

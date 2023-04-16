@@ -10,7 +10,7 @@ import database.UserAuthentication;
 import java.util.List;
 
 public class RemoveByIdCommand implements Command {
-    /**Метод, удаляющий дракона по значению id
+    /** Метод, удаляющий дракона по значению id
      * @param id дракона, которого надо удалить
      * @see DatabaseConnection#executeStatement(String)
      * @see DragonsCollection#updateFromDB() */
@@ -29,8 +29,9 @@ public class RemoveByIdCommand implements Command {
             }
         }
     }
-    /**Выполняет команду с помощью removerById
-     * @see RemoveByIdCommand#removerById(long) */
+    /** Выполняет команду с помощью removerById
+     * @see RemoveByIdCommand#removerById(long)
+     * @see CommandArgsChecker#commandArgsChecker(int) */
     @Override
     public void execute() {
         CommandArgsChecker.commandArgsChecker(1);

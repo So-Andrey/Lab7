@@ -5,7 +5,9 @@ import allForDragons.*;
 import commands.CommandArgsChecker;
 
 public class ShowCommand implements Command {
-    /**Метод, выводящий все элементы коллекции*/
+    /** Метод, выводящий все элементы коллекции
+     * @see CommandArgsChecker#commandArgsChecker(int)
+     * @see Dragon#toString() */
     @Override
     public void execute() {
         CommandArgsChecker.commandArgsChecker(0);

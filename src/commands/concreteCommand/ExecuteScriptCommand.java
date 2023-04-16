@@ -12,7 +12,7 @@ public class ExecuteScriptCommand implements Command {
     private static int recursionChecker = 0;
     /** Поле, отвечающее за остановку выполнения команды execute_script при достижении 10 её повторов */
     private boolean recursion = false;
-    /**Метод, считывающий команды из файла
+    /** Метод, считывающий команды из файла
      * @see ExecuteScriptCommand#invokerFromFile(Scanner) */
     private void executorFromFile(String file) throws FileNotFoundException {
         Scanner scanner = new Scanner(new File(file));
@@ -30,7 +30,7 @@ public class ExecuteScriptCommand implements Command {
         }
         scanner.close();
     }
-    /**Метод, выполняющий команды из файла
+    /** Метод, выполняющий команды из файла
      * @see AddCommand#adderFromFile(Scanner)
      * @see AddIfMinCommand#adderIfMinFromFile(Scanner)
      * @see UpdateCommand#updaterFromFile(Scanner)
@@ -43,7 +43,7 @@ public class ExecuteScriptCommand implements Command {
             default -> Invoker.getCommandHashMap().get(Invoker.getSplit()[0]).execute();
         }
     }
-    /**Метод, выполняющий резолв путей, начинающихся с ~/
+    /** Метод, выполняющий резолв путей, начинающихся с ~/
      * @return возвращает путь к файлу в виде строки */
     private String tildaResolver(String file) {
         if (file.startsWith("~")) {
@@ -51,9 +51,10 @@ public class ExecuteScriptCommand implements Command {
         }
         return file;
     }
-    /**Метод, проверяющий файл и исполняющий скрипт из файла с помощью executorFromFile
+    /** Метод, проверяющий файл и исполняющий скрипт из файла с помощью executorFromFile
      * @see ExecuteScriptCommand#tildaResolver(String)
-     * @see ExecuteScriptCommand#executorFromFile(String) */
+     * @see ExecuteScriptCommand#executorFromFile(String)
+     * @see CommandArgsChecker#commandArgsChecker(int) */
     @Override
     public void execute() {
         CommandArgsChecker.commandArgsChecker(1);

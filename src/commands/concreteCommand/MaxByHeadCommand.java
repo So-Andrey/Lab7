@@ -9,8 +9,9 @@ public class MaxByHeadCommand implements Command {
     private void maxByHeadPrinter() {
         System.out.println(DragonsCollection.getDragons().stream().max((dragon1, dragon2) -> (int)Math.signum(dragon1.getHead().getEyesCount() - dragon2.getHead().getEyesCount())).get());
     }
-    /**Метод, выполняющий команду с помощью maxByHeadPrinter
-     * @see MaxByHeadCommand#maxByHeadPrinter() */
+    /** Метод, выполняющий команду с помощью maxByHeadPrinter
+     * @see MaxByHeadCommand#maxByHeadPrinter()
+     * @see CommandArgsChecker#commandArgsChecker(int) */
     @Override
     public void execute() {
         CommandArgsChecker.commandArgsChecker(0);

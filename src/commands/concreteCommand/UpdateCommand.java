@@ -15,8 +15,9 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class UpdateCommand implements Command {
-    /**Метод, обновляющий имя дракона
-     * @param dragon дракон, у которого меняется имя*/
+    /** Метод, обновляющий имя дракона
+     * @param dragon дракон, у которого меняется имя
+     * @param scanner сканер из консоли для получения нового имени */
     private void updateName(Scanner scanner, Dragon dragon) {
         boolean i = true;
         while (i) {
@@ -30,8 +31,9 @@ public class UpdateCommand implements Command {
             }
         }
     }
-    /**Метод, обновляющий возраст дракона
-     * @param dragon дракон, у которого меняется возраст*/
+    /** Метод, обновляющий возраст дракона
+     * @param dragon дракон, у которого меняется возраст
+     * @param scanner сканер из консоли для получения нового возраста */
     private void updateAge(Scanner scanner, Dragon dragon) {
         boolean i = true;
         while (i) {
@@ -44,8 +46,9 @@ public class UpdateCommand implements Command {
             }
         }
     }
-    /**Метод, обновляющий тип дракона
-     * @param dragon дракон, у которого меняется тип*/
+    /** Метод, обновляющий тип дракона
+     * @param dragon дракон, у которого меняется тип
+     * @param scanner сканер из консоли для получения нового типа дракона */
     private void updateType(Scanner scanner, Dragon dragon) {
         boolean i = true;
         while (i) {
@@ -64,8 +67,9 @@ public class UpdateCommand implements Command {
             }
         }
     }
-    /**Метод, обновляющий цвет дракона
-     * @param dragon дракон, у которого меняется цвет*/
+    /** Метод, обновляющий цвет дракона
+     * @param dragon дракон, у которого меняется цвет
+     * @param scanner сканер из консоли для получения нового цвета дракона */
     private void updateColor(Scanner scanner, Dragon dragon) {
         boolean i = true;
         while (i) {
@@ -85,8 +89,9 @@ public class UpdateCommand implements Command {
             }
         }
     }
-    /**Метод, обновляющий характер дракона
-     * @param dragon дракон, у которого меняется характер*/
+    /** Метод, обновляющий характер дракона
+     * @param dragon дракон, у которого меняется характер
+     * @param scanner сканер из консоли для получения нового характера дракона */
     private void updateCharacter(Scanner scanner, Dragon dragon) {
         boolean i = true;
         while (i) {
@@ -107,8 +112,9 @@ public class UpdateCommand implements Command {
             }
         }
     }
-    /**Метод, обновляющий голову (количество глаз) дракона
-     * @param dragon дракон, у которого меняется голова (количество глаз)*/
+    /** Метод, обновляющий голову (количество глаз) дракона
+     * @param dragon дракон, у которого меняется голова (количество глаз)
+     * @param scanner сканер из консоли для получения нового количества глаз дракона */
     private void updateHead(Scanner scanner, Dragon dragon) {
         boolean i = true;
         while (i) {
@@ -122,7 +128,7 @@ public class UpdateCommand implements Command {
             }
         }
     }
-    /**Метод, обновляющий координаты дракона
+    /** Метод, обновляющий координаты дракона
      * @param dragon дракон, у которого меняется координаты
      * @see UpdateCommand#getNewXCoordinate(Scanner)
      * @see UpdateCommand#getNewYCoordinate(Scanner) */
@@ -130,8 +136,9 @@ public class UpdateCommand implements Command {
         DatabaseConnection.executeStatement("update dragons set x = '" + getNewXCoordinate(scanner) + "' where id = " + dragon.getId());
         DatabaseConnection.executeStatement("update dragons set y = '" + getNewYCoordinate(scanner) + "' where id = " + dragon.getId());
     }
-    /**Метод, получающий новую координату х
-     * @return возвращает координату х*/
+    /** Метод, получающий новую координату х
+     * @return возвращает координату х
+     * @param scanner сканер из консоли для получения новой координаты х */
     private long getNewXCoordinate(Scanner scanner) {
         long x = 0;
         boolean i = true;
@@ -155,8 +162,9 @@ public class UpdateCommand implements Command {
         }
         return x;
     }
-    /**Метод, получающий новую координату у
-     * @return возвращает координату у*/
+    /** Метод, получающий новую координату у
+     * @return возвращает координату у
+     * @param scanner сканер из консоли для получения новой координаты у */
     private float getNewYCoordinate(Scanner scanner) {
         float y = 0;
         boolean i = true;
@@ -172,8 +180,9 @@ public class UpdateCommand implements Command {
         }
         return y;
     }
-    /**Метод, выводящий варианты параметров для изменения и возвращающий один из них
-     * @return возвращает цифру, обозначающую параметр для изменения*/
+    /** Метод, выводящий варианты параметров для изменения и возвращающий один из них
+     * @return возвращает цифру, обозначающую параметр для изменения
+     * @param scanner сканер из консоли для получения параметра */
     private String requestInput(Scanner scanner) {
         boolean i = true;
         String s = "";
@@ -192,7 +201,7 @@ public class UpdateCommand implements Command {
         }
         return s;
     }
-    /**Метод, вызывающий нужный метод для обновления определенного параметра
+    /** Метод, вызывающий нужный метод для обновления определенного параметра
      * @param dragon дракон, параметр которого нужно изменить
      * @param s число, обозначающее, какую характеристику дракона надо изменить
      * @see UpdateCommand#updateName(Scanner, Dragon)
@@ -201,7 +210,8 @@ public class UpdateCommand implements Command {
      * @see UpdateCommand#updateColor(Scanner, Dragon)
      * @see UpdateCommand#updateCharacter(Scanner, Dragon)
      * @see UpdateCommand#updateHead(Scanner, Dragon)
-     * @see UpdateCommand#updateCoordinates(Scanner, Dragon) */
+     * @see UpdateCommand#updateCoordinates(Scanner, Dragon)
+     * @see DragonsCollection#updateFromDB() */
     private void fieldsUpdater(String s, Scanner scanner, Dragon dragon) {
         switch (s) {
             case "1" -> updateName(scanner, dragon);
@@ -215,7 +225,7 @@ public class UpdateCommand implements Command {
         DragonsCollection.updateFromDB();
         System.out.println("Параметр дракона успешно обновлён");
     }
-    /**Метод, обновляющий данные о драконе
+    /** Метод, обновляющий данные о драконе
      * @param id id дракона, параметр которого нужно изменить
      * @see UpdateCommand#requestInput(Scanner)
      * @see UpdateCommand#fieldsUpdater(String, Scanner, Dragon) */
@@ -240,8 +250,9 @@ public class UpdateCommand implements Command {
             }
         }
     }
-    /**Метод, исполняющий команду
-     * @see UpdateCommand#updateDragon(long) */
+    /** Метод, исполняющий команду
+     * @see UpdateCommand#updateDragon(long)
+     * @see CommandArgsChecker#commandArgsChecker(int) */
     @Override
     public void execute() {
         CommandArgsChecker.commandArgsChecker(1);
@@ -257,7 +268,8 @@ public class UpdateCommand implements Command {
     }
     /** Метод, обновляющий дракона параметрами из файла
      * @see UpdateCommand#parametersReader(Scanner)
-     * @see UpdateCommand#fieldsUpdaterFromFile(String, String, Dragon, Scanner) */
+     * @see UpdateCommand#fieldsUpdaterFromFile(String, String, Dragon, Scanner)
+     * @param scanner сканер из файла для получения новых параметров */
     protected static void updaterFromFile(Scanner scanner) {
         String[] parameters = parametersReader(scanner);
         try {
@@ -282,7 +294,8 @@ public class UpdateCommand implements Command {
         } catch (InputMismatchException ignored) {}
     }
     /** Метод, считывающий обновляемое поле из фала
-     * @return возвращает массив, состоящий из номера обновляемого параметра и его нового значения */
+     * @return возвращает массив, состоящий из номера обновляемого параметра и его нового значения
+     * @param scanner сканер из файла для получения новых параметров */
     private static String[] parametersReader(Scanner scanner) {
         String[] parameters = new String[2];
         for (int i = 0; i < parameters.length; ++i) {
@@ -302,7 +315,12 @@ public class UpdateCommand implements Command {
      * @see UpdateCommand#updateColorFromFile(String, Dragon)
      * @see UpdateCommand#updateCharacterFromFile(String, Dragon)
      * @see UpdateCommand#updateHeadFromFile(String, Dragon)
-     * @see UpdateCommand#updateCoordinatesFromFile(String, Scanner, Dragon) */
+     * @see UpdateCommand#updateCoordinatesFromFile(String, Scanner, Dragon)
+     * @see DragonsCollection#updateFromDB()
+     * @param parameter номер обновляемого параметра
+     * @param newValue новое значение параметра
+     * @param dragon обновляемый дракон
+     * @param scanner сканер из файла в случае (нужен для добавления у координаты, так как она читается с новой строки) */
     private static void fieldsUpdaterFromFile(String parameter, String newValue, Dragon dragon, Scanner scanner) {
         if (parameter.matches(("[1-7]"))) {
             switch (parameter) {
@@ -314,7 +332,7 @@ public class UpdateCommand implements Command {
                 case "6" -> updateHeadFromFile(newValue, dragon);
                 case "7" -> updateCoordinatesFromFile(newValue, scanner, dragon);
             }
-            DragonsCollection.putDragonsFromDB();
+            DragonsCollection.updateFromDB();
             System.out.println("Параметр дракона успешно обновлён");
         } else {
             throw new InputMismatchException();

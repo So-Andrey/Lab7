@@ -5,7 +5,9 @@ import commands.Command;
 import commands.CommandArgsChecker;
 
 public class InfoCommand implements Command {
-    /**Метод, выводящий информацию о коллекции*/
+    /** Метод, выводящий информацию о коллекции
+     * @see CommandArgsChecker#commandArgsChecker(int)
+     * @see DragonsCollection#getInfo() */
     @Override
     public void execute() {
         CommandArgsChecker.commandArgsChecker(0);

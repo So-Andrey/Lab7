@@ -9,7 +9,7 @@ import database.UserAuthentication;
 import java.util.List;
 
 public class RemoveLowerCommand implements Command {
-    /**Метод, удаляющий из коллекции всех драконов младше заданного
+    /** Метод, удаляющий из коллекции всех драконов младше заданного
      * @param thisDragon заданный дракон
      * @see DragonsCollection#updateFromDB()
      * @see DatabaseConnection#executeStatement(String) */
@@ -24,8 +24,9 @@ public class RemoveLowerCommand implements Command {
             System.out.println("Количество удалённых драконов: " + (beforeSize - DragonsCollection.getDragons().size()) + "\nP.S. (Вы можете удалять только тех драконов, создателем которых являетесь)");
         }
     }
-    /**Метод, находящий заданного дракона в коллекции и вызывающий метод removerLower
-     * @see RemoveLowerCommand#removerLower(Dragon)  */
+    /** Метод, находящий заданного дракона в коллекции и вызывающий метод removerLower
+     * @see RemoveLowerCommand#removerLower(Dragon)
+     * @see CommandArgsChecker#commandArgsChecker(int) */
     @Override
     public void execute() {
         CommandArgsChecker.commandArgsChecker(1);

@@ -9,7 +9,7 @@ import database.UserAuthentication;
 import java.util.List;
 
 public class RemoveGreaterCommand implements Command {
-    /**Метод, удаляющий из коллекции всех драконов старше заданного
+    /** Метод, удаляющий из коллекции всех драконов старше заданного
      * @param thisDragon заданный дракон
      * @see DragonsCollection#updateFromDB()
      * @see DatabaseConnection#executeStatement(String) */
@@ -24,8 +24,9 @@ public class RemoveGreaterCommand implements Command {
             System.out.println("Количество удалённых драконов: " + (beforeSize - DragonsCollection.getDragons().size()) + "\nP.S. (Вы можете удалять только тех драконов, создателем которых являетесь)");
         }
     }
-    /**Метод, находящий заданного дракона в коллекции и вызывающий метод removerGreater
-     * @see RemoveGreaterCommand#removerGreater(Dragon) */
+    /** Метод, находящий заданного дракона в коллекции и вызывающий метод removerGreater
+     * @see RemoveGreaterCommand#removerGreater(Dragon)
+     * @see CommandArgsChecker#commandArgsChecker(int) */
     @Override
     public void execute() {
         CommandArgsChecker.commandArgsChecker(1);

@@ -10,10 +10,15 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class UserAuthentication {
+    /** Переменная для хранения имени текущего пользователя */
     private static String currentUser = null;
     public static String getCurrentUser() {
         return currentUser;
     }
+    /** Метод для аутентификации пользователя
+     * @see DatabaseConnection#executePreparedStatement(String, String...)
+     * @see UserAuthentication#userRegistration(String, Scanner)
+     * @see UserAuthentication#userLoggingIn(String, Scanner) */
     public static void userAuthentication() {
         System.out.println("Введите имя пользователя");
         Scanner scanner = new Scanner(System.in);
@@ -29,6 +34,12 @@ public class UserAuthentication {
             System.out.println(e.getMessage());
         }
     }
+    /** Метод для регистрации нового пользователя
+     * @param login имя нового пользователя
+     * @param scanner сканер из консоли для получения пароля нового пользователя
+     * @see DatabaseConnection#executePreparedStatement(String, String...)
+     * @see MessageDigest#digest(byte[]) метод для получения хэша
+     * @see UserAuthentication#saltGetter() */
     private static void userRegistration(String login, Scanner scanner) {
         System.out.println("Введите пароль");
         MessageDigest md;
@@ -43,6 +54,12 @@ public class UserAuthentication {
         System.out.println("Вы успешно прошли регистрацию");
         currentUser = login;
     }
+    /** Метод для вхождения существующего пользователя в программу
+     * @param login имя пользователя
+     * @param scanner сканер из консоли для получения пароля пользователя
+     * @see DatabaseConnection#executePreparedStatement(String, String...)
+     * @see MessageDigest#digest(byte[]) метод для получения хэша
+     * @see UserAuthentication#saltGetter() */
     private static void userLoggingIn(String login, Scanner scanner) {
         System.out.println("Введите пароль");
         try {
@@ -63,6 +80,8 @@ public class UserAuthentication {
             System.out.println(e.getMessage());
         }
     }
+    /** Метод для получения "соли" для более безопасного хэширования паролей
+     * @return возвращает случайный набор из 20 символов */
     private static String saltGetter() {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < 20; i++) {

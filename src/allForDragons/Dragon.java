@@ -7,15 +7,15 @@ import java.sql.SQLException;
 import java.util.Date;
 
 public class Dragon implements Comparable<Dragon>{
-    private final long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
-    private final Coordinates coordinates; //Поле не может быть null
-    private final java.util.Date creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
+    private Coordinates coordinates; //Поле не может быть null
+    private java.util.Date creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private Long age; //Значение поля должно быть больше 0, Поле не может быть null
     private Color color; //Поле может быть null
     private DragonType type; //Поле не может быть null
     private DragonCharacter character; //Поле может быть null
-    private final DragonHead head;
+    private DragonHead head;
     private final String creator;
     /** Конструктор для создания нового дракона из консоли */
     public Dragon(String name, Coordinates coordinates, Long age, Color color, DragonType type, DragonCharacter character, DragonHead head) {
@@ -43,6 +43,7 @@ public class Dragon implements Comparable<Dragon>{
         this.color = color;
         this.creator = creator;
     }
+    /** Метод для генерации id дракона с использованием средств базы данных */
     private long setId() {
         long newId = 0;
         ResultSet resultSet = DatabaseConnection.executePreparedStatement("SELECT nextval(?)", "id");
@@ -84,21 +85,6 @@ public class Dragon implements Comparable<Dragon>{
     public String getCreator() {
         return creator;
     }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public void setAge(Long age) {
-        this.age = age;
-    }
-    public void setColor(Color color) {
-        this.color = color;
-    }
-    public void setType(DragonType type) {
-        this.type = type;
-    }
-    public void setCharacter(DragonCharacter character) {
-        this.character = character;
-    }
     @Override
     public String toString() {
         return "id дракона: " + id + "\n" +
@@ -112,7 +98,7 @@ public class Dragon implements Comparable<Dragon>{
                 "Создатель: " + creator + "\n" +
                 "Дата и время создания: " + creationDate + "\n";
     }
-    /** Метод для сравнения драконов по возрасту*/
+    /** Переопределение метода compareTo для сравнения драконов (по возрасту) */
     @Override
     public int compareTo(Dragon dragon) {
         return (int)Math.signum(this.age - dragon.getAge());

@@ -6,13 +6,14 @@ import commands.CommandArgsChecker;
 import commands.Invoker;
 
 public class CountByHeadCommand implements Command {
-    /**Метод, выводящий количество драконов с заданным количеством глаз
+    /** Метод, выводящий количество драконов с заданным количеством глаз
      * @param eyesCount заданное количество глаз */
     private void getCountOfDragons(double eyesCount) {
         System.out.println("Количество драконов с заданным количеством глаз: " + DragonsCollection.getDragons().stream().filter(dragon -> dragon.getHead().getEyesCount() == eyesCount).count());
     }
-    /**Метод, выводящий количество элементов, значение поля head которых равно заданному с помощью getCountOfDragons
-     * @see CountByHeadCommand#getCountOfDragons(double)  */
+    /** Метод, выводящий количество элементов, значение поля head которых равно заданному с помощью getCountOfDragons
+     * @see CountByHeadCommand#getCountOfDragons(double)
+     * @see CommandArgsChecker#commandArgsChecker(int) */
     @Override
     public void execute() {
         CommandArgsChecker.commandArgsChecker(1);

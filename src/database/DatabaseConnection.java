@@ -3,7 +3,9 @@ package database;
 import java.sql.*;
 
 public class DatabaseConnection {
+    /** Переменная для хранения соединения с базой данных */
     private static Connection connection;
+    /** Метод для получения соединения с базой данных */
     private static synchronized void tryConnection() {
         try {
             connection = DriverManager.getConnection(DatabasePropertiesGetter.getUrl(), DatabasePropertiesGetter.getUser(), DatabasePropertiesGetter.getPassword());
@@ -11,6 +13,9 @@ public class DatabaseConnection {
             System.out.println(sqlException.getMessage());
         }
     }
+    /** Метод для выполнения статического SQL-запроса
+     * @param query выполняемый запрос
+     * @see DatabaseConnection#tryConnection() */
     public static void executeStatement(String query) {
         tryConnection();
         try {
@@ -20,6 +25,11 @@ public class DatabaseConnection {
             System.out.println(sqlException.getMessage());
         }
     }
+    /** Метод для выполнения статического SQL-запроса и получения данных из базы данных
+     * @param sqlRequest выполняемый запрос
+     * @param values вариативные элементы запроса
+     * @see DatabaseConnection#tryConnection()
+     * @return возвращает тип ResultSet для его дальнейшей обработки */
     public static ResultSet executePreparedStatement(String sqlRequest, String... values) {
         tryConnection();
         try {
@@ -38,6 +48,9 @@ public class DatabaseConnection {
             }
         }
     }
+    /** Метод для создания необходимых для работы программы таблиц в базе данных в случае их несуществования при запуске программы
+     * @see DatabaseConnection#executePreparedStatement(String, String...)
+     * @see  DatabaseConnection#executeStatement(String) */
     public static void createTablesIfNotExist() {
         try {
             if (executePreparedStatement("SELECT * FROM DRAGONS") == null) {
