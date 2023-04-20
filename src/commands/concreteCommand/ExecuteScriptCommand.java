@@ -40,6 +40,10 @@ public class ExecuteScriptCommand implements Command {
             case "add" -> AddCommand.adderFromFile(scanner);
             case "add_if_min" -> AddIfMinCommand.adderIfMinFromFile(scanner);
             case "update" -> UpdateCommand.updaterFromFile(scanner);
+            case "execute_script" -> {
+                ++recursionChecker;
+                Invoker.getCommandHashMap().get(Invoker.getSplit()[0]).execute();
+            }
             default -> Invoker.getCommandHashMap().get(Invoker.getSplit()[0]).execute();
         }
     }
@@ -63,7 +67,6 @@ public class ExecuteScriptCommand implements Command {
         try {
             if (new File(file).exists() & new File(file).canRead()) {
                 recursion = false;
-                ++recursionChecker;
                 executorFromFile(file);
             } else {
                 System.out.println("Нет доступа к файлу");

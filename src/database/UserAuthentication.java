@@ -4,10 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Scanner;
+import java.sql.SQLException;
+import java.util.*;
 
 public class UserAuthentication {
     /** Переменная для хранения имени текущего пользователя */
@@ -23,6 +21,7 @@ public class UserAuthentication {
         System.out.println("Введите имя пользователя");
         Scanner scanner = new Scanner(System.in);
         String login = scanner.nextLine().trim();
+        if (login.contains("'")) throw new NoSuchElementException();
         try {
             if (Objects.requireNonNull(DatabaseConnection.executePreparedStatement("SELECT * FROM USERS WHERE login = ?", login)).next()) {
                 userLoggingIn(login, scanner);
@@ -30,7 +29,7 @@ public class UserAuthentication {
                 System.out.println("Пользователя с таким именем не существует, если хотите зарегистрироваться, введите 1, если выйти - нажмите любую клавишу");
                 if (scanner.nextLine().trim().equals("1")) userRegistration(login, scanner);
             }
-        } catch (Exception e) {
+        } catch (SQLException | NullPointerException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -61,23 +60,27 @@ public class UserAuthentication {
      * @see MessageDigest#digest(byte[]) метод для получения хэша
      * @see UserAuthentication#saltGetter() */
     private static void userLoggingIn(String login, Scanner scanner) {
-        System.out.println("Введите пароль");
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            ResultSet resultSetSalt = DatabaseConnection.executePreparedStatement("SELECT salt FROM USERS WHERE login = ?", login);
-            resultSetSalt.next();
-            String salt = resultSetSalt.getString(1);
-            ResultSet resultSetHash = DatabaseConnection.executePreparedStatement("SELECT hash FROM USERS WHERE login = ?", login);
-            resultSetHash.next();
-            byte[] hash = md.digest(("*63&^mVLC(#" + scanner.nextLine().trim() + salt).getBytes(StandardCharsets.UTF_8));
-            if (Arrays.toString(hash).equals(resultSetHash.getString(1))) {
-                System.out.println("Вы успешно прошли аутентификацию");
-                currentUser = login;
-            } else {
-                System.out.println("Неверный пароль");
+        boolean userTrying = true;
+        while (userTrying) {
+            System.out.println("Введите пароль");
+            try {
+                MessageDigest md = MessageDigest.getInstance("SHA-1");
+                ResultSet resultSetSalt = DatabaseConnection.executePreparedStatement("SELECT salt FROM USERS WHERE login = ?", login);
+                resultSetSalt.next();
+                String salt = resultSetSalt.getString(1);
+                ResultSet resultSetHash = DatabaseConnection.executePreparedStatement("SELECT hash FROM USERS WHERE login = ?", login);
+                resultSetHash.next();
+                byte[] hash = md.digest(("*63&^mVLC(#" + scanner.nextLine().trim() + salt).getBytes(StandardCharsets.UTF_8));
+                if (Arrays.toString(hash).equals(resultSetHash.getString(1))) {
+                    System.out.println("Вы успешно прошли аутентификацию");
+                    currentUser = login;
+                    userTrying = false;
+                } else {
+                    System.out.println("Неверный пароль (если хотите выйти из программы, вызовите EOF, нажав control + d)");
+                }
+            } catch (SQLException | NoSuchAlgorithmException | NullPointerException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
         }
     }
     /** Метод для получения "соли" для более безопасного хэширования паролей

@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.*;
+import java.util.Objects;
 
 public class DatabaseConnection {
     /** Переменная для хранения соединения с базой данных */
@@ -54,21 +55,21 @@ public class DatabaseConnection {
     public static void createTablesIfNotExist() {
         try {
             if (executePreparedStatement("SELECT * FROM DRAGONS") == null) {
-                executeStatement("CREATE TABLE DRAGONS (id bigint NOT NULL, creator text NOT NULL, creationDate bigint NOT NULL, name text NOT NULL, age bigint NOT NULL, color text NOT NULL, type text NOT NULL, character text NOT NULL, eyesCount double precision NOT NULL, x bigint NOT NULL, y double precision NOT NULL)");
+                executeStatement("CREATE TABLE DRAGONS (id bigint PRIMARY KEY, creator text NOT NULL, creationDate bigint NOT NULL, name text NOT NULL, age bigint NOT NULL, color text NOT NULL, type text NOT NULL, character text NOT NULL, eyesCount double precision NOT NULL, x bigint NOT NULL, y double precision NOT NULL)");
             }
             if (executePreparedStatement("SELECT * FROM USERS") == null) {
-                executeStatement("CREATE TABLE USERS (login text  NOT NULL, hash text NOT NULL, salt text NOT NULL)");
+                executeStatement("CREATE TABLE USERS (login text  PRIMARY KEY, hash text NOT NULL, salt text NOT NULL)");
             }
             if (executePreparedStatement("SELECT * FROM id") == null) {
                 ResultSet resultSet = executePreparedStatement("SELECT id FROM DRAGONS");
                 long maxId = 1;
-                while (resultSet.next()) {
+                while (Objects.requireNonNull(resultSet).next()) {
                     maxId = Long.max(resultSet.getLong(1), maxId);
                 }
                 executeStatement("CREATE SEQUENCE id START " + maxId);
             }
-        } catch (SQLException sqlException) {
-            System.out.println(sqlException.getMessage());
+        } catch (SQLException | NullPointerException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

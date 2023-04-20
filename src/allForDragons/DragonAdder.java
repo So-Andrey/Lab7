@@ -17,25 +17,25 @@ public class DragonAdder {
         DragonsCollection.updateFromDB();
         System.out.println("Новый элемент коллекции добавлен");
     }
-    /**Метод для создания дракона с помощью консоли
-     * @return Dragon*/
+    /** Метод для создания дракона с помощью консоли
+     * @return Dragon */
     public static Dragon dragonAdder() {
         Scanner sc = new Scanner(System.in);
-        String name = "k";
+        String name = "";
         long x = 0;
         float y = 0;
         Color dragonColor = null;
-        long age = Long.parseLong("0");
+        long age = 0;
         DragonType dragonType = null;
         DragonCharacter dragonCharacter = null;
-        double eyesCount = Double.parseDouble("0");
+        double eyesCount = 0;
         int i = 1;
         while (i != 0) {
             try {
                 while (i == 1) {
                     System.out.println("Введите имя дракона");
                     name = sc.nextLine();
-                    if (name.trim().isEmpty()) {
+                    if (name.trim().isEmpty() | name.contains("'")) {
                         throw new InputMismatchException();
                     }
                     ++i;
@@ -44,9 +44,6 @@ public class DragonAdder {
                     try {
                         System.out.println("Введите координату X дракона");
                         String s = sc.nextLine();
-                        if(!s.matches("([-+]?\\d+)")){
-                            throw new InputMismatchException();
-                        }
                         x = Long.parseLong(s);
                         if (x > 610) {
                             throw new IllegalValueOfXException();
@@ -54,6 +51,8 @@ public class DragonAdder {
                         ++i;
                     } catch (IllegalValueOfXException illegalValueOfXException) {
                         System.out.println(illegalValueOfXException.getMessage());
+                    } catch (NumberFormatException numberFormatException) {
+                        throw new InputMismatchException();
                     }
                 }
                 while (i == 3) {
@@ -61,19 +60,21 @@ public class DragonAdder {
                     String s = sc.nextLine();
                     try {
                         Double.parseDouble(s);
-                    } catch (NumberFormatException ex){
+                    } catch (NumberFormatException ex) {
                         throw new InputMismatchException();
                     }
                     y = Float.parseFloat(s);
                     ++i;
                 }
                 while (i == 4) {
-                    System.out.println("Введите возраст дракона");
+                    System.out.println("Введите возраст дракона (должен быть больше 0)");
                     String s = sc.nextLine();
-                    if(!s.matches("([-+]?\\d+)")){
+                    try {
+                        age = Long.parseLong(s);
+                        if (age <= 0) throw new InputMismatchException();
+                    } catch (NumberFormatException numberFormatException) {
                         throw new InputMismatchException();
                     }
-                    age = Long.parseLong(s);
                     ++i;
                 }
                 while (i == 5) {
@@ -82,11 +83,7 @@ public class DragonAdder {
                     if (!(color.matches("[1-3]")||color.equals("GREEN")||color.equals("ORANGE")||color.equals("BROWN")||color.isEmpty())) {
                         throw new InputMismatchException();
                     }
-                    switch (color) {
-                        case "1", "GREEN" -> dragonColor = Color.GREEN;
-                        case "2", "ORANGE" -> dragonColor = Color.ORANGE;
-                        case "3", "BROWN" -> dragonColor = Color.BROWN;
-                    }
+                    dragonColor = Color.getColor(color);
                     ++i;
                 }
                 while (i == 6) {
@@ -95,11 +92,7 @@ public class DragonAdder {
                     if (!(type.matches("[1-3]")||type.equals("WATER")||type.equals("UNDERGROUND")||type.equals("FIRE"))) {
                         throw new InputMismatchException();
                     }
-                    switch (type) {
-                        case "1", "WATER" -> dragonType = DragonType.WATER;
-                        case "2", "UNDERGROUND" -> dragonType = DragonType.UNDERGROUND;
-                        case "3", "FIRE" -> dragonType = DragonType.FIRE;
-                    }
+                    dragonType = DragonType.getType(type);
                     ++i;
                 }
                 while (i == 7) {
@@ -108,12 +101,7 @@ public class DragonAdder {
                     if (!(character.matches("[1-4]")||character.equals("CUNNING")||character.equals("WISE")||character.equals("CHAOTIC_EVIL")||character.equals("FICKLE")||character.isEmpty())) {
                         throw new InputMismatchException();
                     }
-                    switch (character) {
-                        case "1", "CUNNING" -> dragonCharacter = DragonCharacter.CUNNING;
-                        case "2", "WISE" -> dragonCharacter = DragonCharacter.WISE;
-                        case "3", "CHAOTIC_EVIL" -> dragonCharacter = DragonCharacter.CHAOTIC_EVIL;
-                        case "4", "FICKLE" -> dragonCharacter = DragonCharacter.FICKLE;
-                    }
+                    dragonCharacter = DragonCharacter.getCharacter(character);
                     ++i;
                 }
                 while (i == 8) {
@@ -134,7 +122,7 @@ public class DragonAdder {
         }
         return new Dragon(name, new Coordinates(x, y), age, dragonColor, dragonType, dragonCharacter, new DragonHead(eyesCount));
     }
-    /**Метод для добавления дракона из файла
+    /** Метод для добавления дракона из файла
      * @see DragonAdder#fieldsReader(Scanner)
      * @see DragonAdder#nameFromFileChecker(String)
      * @see DragonAdder#XCoordinateFromFileChecker(String)
@@ -150,7 +138,7 @@ public class DragonAdder {
         String[] fields = fieldsReader(scanner);
         return new Dragon(nameFromFileChecker(fields[0]), new Coordinates(XCoordinateFromFileChecker(fields[1]), YCoordinateFromFileChecker(fields[2])), ageFromFileChecker(fields[3]), colorFromFileChecker(fields[4]), typeFromFileChecker(fields[5]), characterFromFileChecker(fields[6]), new DragonHead(eyesCountFromFileChecker(fields[7])));
     }
-    /**Метод, считывающий поля дракона из файла
+    /** Метод, считывающий поля дракона из файла
      * @return возвращает массив с полями нового дракона */
     private static String[] fieldsReader(Scanner sc) {
         String[] fields = new String[8];
@@ -167,7 +155,7 @@ public class DragonAdder {
     /** Метод, проверяющий имя нового дракона
      * @return String name */
     private static String nameFromFileChecker(String name) {
-        if (name.trim().isEmpty()) {
+        if (name.trim().isEmpty() | name.contains("'")) {
             throw new InputMismatchException();
         }
         return name;
@@ -200,7 +188,7 @@ public class DragonAdder {
      * @return Long age */
     private static Long ageFromFileChecker(String ageString) {
         try {
-            Long.parseLong(ageString);
+            if (Long.parseLong(ageString) <= 0) throw new InputMismatchException();
         } catch (NumberFormatException numberFormatException) {
             throw new InputMismatchException();
         }
@@ -212,13 +200,7 @@ public class DragonAdder {
         if (!(color.matches("[1-3]")||color.equals("GREEN")||color.equals("ORANGE")||color.equals("BROWN")||color.isEmpty())) {
             throw new InputMismatchException();
         }
-        Color dragonColor = null;
-        switch (color) {
-            case "1", "GREEN" -> dragonColor = Color.GREEN;
-            case "2", "ORANGE" -> dragonColor = Color.ORANGE;
-            case "3", "BROWN" -> dragonColor = Color.BROWN;
-        }
-        return dragonColor;
+        return Color.getColor(color);
     }
     /** Метод, проверяющий тип нового дракона
      * @return Type */
@@ -226,13 +208,7 @@ public class DragonAdder {
         if (!(type.matches("[1-3]")||type.equals("WATER")||type.equals("UNDERGROUND")||type.equals("FIRE"))) {
             throw new InputMismatchException();
         }
-        DragonType dragonType = null;
-        switch (type) {
-            case "1", "WATER" -> dragonType = DragonType.WATER;
-            case "2", "UNDERGROUND" -> dragonType = DragonType.UNDERGROUND;
-            case "3", "FIRE" -> dragonType = DragonType.FIRE;
-        }
-        return dragonType;
+        return DragonType.getType(type);
     }
     /** Метод, проверяющий характер нового дракона
      * @return DragonCharacter */
@@ -240,14 +216,7 @@ public class DragonAdder {
         if (!(character.matches("[1-4]")||character.equals("CUNNING")||character.equals("WISE")||character.equals("CHAOTIC_EVIL")||character.equals("FICKLE")||character.isEmpty())) {
             throw new InputMismatchException();
         }
-        DragonCharacter dragonCharacter = null;
-        switch (character) {
-            case "1", "CUNNING" -> dragonCharacter = DragonCharacter.CUNNING;
-            case "2", "WISE" -> dragonCharacter = DragonCharacter.WISE;
-            case "3", "CHAOTIC_EVIL" -> dragonCharacter = DragonCharacter.CHAOTIC_EVIL;
-            case "4", "FICKLE" -> dragonCharacter = DragonCharacter.FICKLE;
-        }
-        return dragonCharacter;
+        return DragonCharacter.getCharacter(character);
     }
     /** Метод, проверяющий количество глаз нового дракона
      * @return Double eyesCount */

@@ -2,7 +2,6 @@ package commands;
 
 import commands.concreteCommand.*;
 import java.util.HashMap;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Invoker {
@@ -48,12 +47,7 @@ public class Invoker {
         Scanner scanner = new Scanner(System.in);
         while (programRunning) {
             try {
-                try {
-                    split = scanner.nextLine().trim().split(" ");
-                } catch (NoSuchElementException noSuchElementException) {
-                    System.out.println("Неверный ввод, перезапустите программу");
-                    programRunning = false;
-                }
+                split = scanner.nextLine().trim().split(" ");
                 commandHashMap.get(split[0]).execute();
             } catch (NullPointerException nullPointerException) {
                 if (programRunning) { System.out.println("Неверная команда"); }

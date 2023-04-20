@@ -26,7 +26,7 @@ public class DragonsCollection {
                 try {
                     long id = resultSet.getLong(1);
                     String creator = resultSet.getString(2);
-                    java.sql.Date creationDate = new java.sql.Date(resultSet.getLong(3));
+                    Date creationDate = new Date(resultSet.getLong(3));
                     String name = resultSet.getString(4);
                     long age = resultSet.getLong(5);
                     String colorString = resultSet.getString(6);
