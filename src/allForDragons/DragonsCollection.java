@@ -2,6 +2,7 @@ package allForDragons;
 
 import database.DatabaseConnection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public class DragonsCollection {
@@ -48,9 +49,11 @@ public class DragonsCollection {
                     long x = resultSet.getLong(10);
                     float y = resultSet.getFloat(11);
                     DragonsCollection.getDragons().add(new Dragon(name, new Coordinates(x, y), age, color, type, character, new DragonHead(eyesCount), creator, creationDate, id));
-                } catch (Exception ignored) {}
+                } catch (SQLException | NullPointerException | IllegalArgumentException exception) {
+                    DatabaseConnection.executeStatement("delete * from dragons where id = " + resultSet.getLong(1));
+                }
             }
-        } catch (Exception ignored) {}
+        } catch (SQLException ignored) {}
     }
     /** Метод для обновления данных в коллекции */
     public static void updateFromDB() {
